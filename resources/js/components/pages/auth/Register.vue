@@ -1,7 +1,9 @@
 <script setup>
 import axios from "axios";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const form = ref({
     name: "",
     email: "",
@@ -15,6 +17,9 @@ const register = async () => {
     try {
         const response = await axios.post("/register", form.value);
         console.log(response);
+        if (response.status === 201) {
+            await router.push("/dashboard");
+        }
     } catch (error) {
         if (error.response && error.response.status === 422) {
             console.error(error.response.data.message);

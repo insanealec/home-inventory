@@ -1,4 +1,7 @@
-<script setup></script>
+<script setup>
+import LogoutButton from './LogoutButton.vue';
+
+</script>
 <template>
     <nav class="bg-white shadow dark:bg-gray-800">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -36,6 +39,7 @@
                         >
                             Shopping Lists
                         </router-link>
+                        <logout-button class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-300" />
                     </div>
                 </div>
             </div>
