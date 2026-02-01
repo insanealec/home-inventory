@@ -3,20 +3,22 @@ import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
+// Import CSS
+import '../css/app.css';
+
 // Import components
 import App from './components/App.vue';
 import Welcome from './components/pages/Welcome.vue';
-
-// Import CSS
-import '../css/app.css';
 import Login from './components/pages/auth/Login.vue';
 import Register from './components/pages/auth/Register.vue';
+import Dashboard from './components/pages/Dashboard.vue';
 
 // Create router
 const routes = [
     { path: '/', component: Welcome },
     { path: '/register', component: Register },
     { path: '/login', component: Login },
+    { path: '/dashboard', component: Dashboard}
 ];
 
 const router = createRouter({

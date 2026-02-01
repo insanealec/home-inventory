@@ -9,7 +9,7 @@ const form = ref({});
 const logout = async () => {
     try {
         await axios.post('/logout', form.value);
-        await router.push("/");
+        window.location.href = '/';
     } catch (error) {
         console.error('Logout failed:', error);
     }

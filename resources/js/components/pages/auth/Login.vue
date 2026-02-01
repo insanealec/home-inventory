@@ -16,7 +16,7 @@ const login = async () => {
         const response = await axios.post("/login", form.value);
         console.log(response);
         if (response.status === 200) {
-            await router.push("/dashboard");
+            window.location.href = "/dashboard";
         }
     } catch (error) {
         if (error.response && error.response.status === 422) {
