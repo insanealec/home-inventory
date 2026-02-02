@@ -16,16 +16,18 @@ class LoadTokens
      */
     public function handle(?User $user)
     {
-        if (!$user) {
+        if (! $user) {
             return collect();
         }
+
         return $user->tokens;
     }
 
     public function asController(Request $request)
     {
         $user = $request->user();
-        return ($this->handle($user))->map(function ($token) {
+
+        return $this->handle($user)->map(function ($token) {
             return [
                 'id' => $token->id,
                 'name' => $token->name,

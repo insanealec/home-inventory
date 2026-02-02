@@ -4,7 +4,6 @@ namespace App\Actions\Token;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class DestroyToken
@@ -16,9 +15,10 @@ class DestroyToken
      */
     public function handle(?User $user, string $tokenId)
     {
-        if (!$user) {
+        if (! $user) {
             return collect();
         }
+
         return $user->tokens->where('id', $tokenId)->first()?->delete() ?? false;
     }
 
@@ -26,6 +26,7 @@ class DestroyToken
     {
         $user = $request->user();
         $tokenId = $request->input('token_id');
-        return ($this->handle($user, $tokenId));
+
+        return $this->handle($user, $tokenId);
     }
 }

@@ -4,7 +4,6 @@ namespace App\Actions\Token;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class CreateToken
@@ -16,10 +15,11 @@ class CreateToken
      */
     public function handle(?User $user, string $name, array $abilities = ['*'])
     {
-        if (!$user) {
+        if (! $user) {
             return null;
         }
         $token = $user->createToken($name, $abilities);
+
         return $token;
     }
 
@@ -28,6 +28,7 @@ class CreateToken
         $user = $request->user();
         $name = $request->input('name');
         $abilities = $request->input('abilities', ['*']);
-        return ($this->handle($user, $name, $abilities));
+
+        return $this->handle($user, $name, $abilities);
     }
 }
