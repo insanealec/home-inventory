@@ -1,30 +1,7 @@
 <script setup>
-import axios from "axios";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useAuthStore } from "../../../stores/auth";
 
-const router = useRouter();
-const form = ref({
-    email: "",
-    password: "",
-});
-
-const errors = ref({});
-
-const login = async () => {
-    try {
-        const response = await axios.post("/login", form.value);
-        console.log(response);
-        if (response.status === 200) {
-            window.location.href = "/dashboard";
-        }
-    } catch (error) {
-        if (error.response && error.response.status === 422) {
-            console.error(error.response.data.message);
-            errors.value = error.response.data.errors;
-        }
-    }
-};
+const authStore = useAuthStore();
 </script>
 <template>
     <div
@@ -36,7 +13,7 @@ const login = async () => {
             <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
                 Login
             </h2>
-            <form @submit.prevent="login" class="space-y-4">
+            <form @submit.prevent="authStore.login" class="space-y-4">
                 <div>
                     <label
                         for="email"
@@ -44,15 +21,15 @@ const login = async () => {
                         >Email</label
                     >
                     <input
-                        v-model="form.email"
+                        v-model="authStore.loginForm.email"
                         type="email"
                         id="email"
                         class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         required
                     />
-                    <div v-if="errors.email" class="text-red-500 text-sm mt-1">
+                    <div v-if="authStore.errors.email" class="text-red-500 text-sm mt-1">
                         <div
-                            v-for="(error, index) in errors.email"
+                            v-for="(error, index) in authStore.errors.email"
                             :key="index"
                         >
                             {{ error }}
@@ -66,18 +43,18 @@ const login = async () => {
                         >Password</label
                     >
                     <input
-                        v-model="form.password"
+                        v-model="authStore.loginForm.password"
                         type="password"
                         id="password"
                         class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         required
                     />
                     <div
-                        v-if="errors.password"
+                        v-if="authStore.errors.password"
                         class="text-red-500 text-sm mt-1"
                     >
                         <div
-                            v-for="(error, index) in errors.password"
+                            v-for="(error, index) in authStore.errors.password"
                             :key="index"
                         >
                             {{ error }}

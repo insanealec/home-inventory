@@ -1,32 +1,7 @@
 <script setup>
-import axios from "axios";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useAuthStore } from "../../../stores/auth";
 
-const router = useRouter();
-const form = ref({
-    name: "",
-    email: "",
-    password: "",
-    password_confirmation: "",
-});
-
-const errors = ref({});
-
-const register = async () => {
-    try {
-        const response = await axios.post("/register", form.value);
-        console.log(response);
-        if (response.status === 201) {
-            window.location.href = "/dashboard";
-        }
-    } catch (error) {
-        if (error.response && error.response.status === 422) {
-            console.error(error.response.data.message);
-            errors.value = error.response.data.errors;
-        }
-    }
-};
+const authStore = useAuthStore();
 </script>
 <template>
     <div
@@ -38,7 +13,7 @@ const register = async () => {
             <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
                 Register
             </h2>
-            <form @submit.prevent="register" class="space-y-4">
+            <form @submit.prevent="authStore.register" class="space-y-4">
                 <div>
                     <label
                         for="name"
@@ -46,14 +21,14 @@ const register = async () => {
                         >Name</label
                     >
                     <input
-                        v-model="form.name"
+                        v-model="authStore.registerForm.name"
                         type="text"
                         id="name"
                         class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         required
                     />
-                    <div v-if="errors.name" class="text-red-500 text-sm mt-1">
-                        <div v-for="(error, index) in errors.name" :key="index">
+                    <div v-if="authStore.errors.name" class="text-red-500 text-sm mt-1">
+                        <div v-for="(error, index) in authStore.errors.name" :key="index">
                             {{ error }}
                         </div>
                     </div>
@@ -65,15 +40,15 @@ const register = async () => {
                         >Email</label
                     >
                     <input
-                        v-model="form.email"
+                        v-model="authStore.registerForm.email"
                         type="email"
                         id="email"
                         class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         required
                     />
-                    <div v-if="errors.email" class="text-red-500 text-sm mt-1">
+                    <div v-if="authStore.errors.email" class="text-red-500 text-sm mt-1">
                         <div
-                            v-for="(error, index) in errors.email"
+                            v-for="(error, index) in authStore.errors.email"
                             :key="index"
                         >
                             {{ error }}
@@ -87,18 +62,18 @@ const register = async () => {
                         >Password</label
                     >
                     <input
-                        v-model="form.password"
+                        v-model="authStore.registerForm.password"
                         type="password"
                         id="password"
                         class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         required
                     />
                     <div
-                        v-if="errors.password"
+                        v-if="authStore.errors.password"
                         class="text-red-500 text-sm mt-1"
                     >
                         <div
-                            v-for="(error, index) in errors.password"
+                            v-for="(error, index) in authStore.errors.password"
                             :key="index"
                         >
                             {{ error }}
@@ -112,14 +87,14 @@ const register = async () => {
                         >Confirm Password</label
                     >
                     <input
-                        v-model="form.password_confirmation"
+                        v-model="authStore.registerForm.password_confirmation"
                         type="password"
                         id="password_confirmation"
                         class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         required
                     />
                     <div
-                        v-if="errors.password_confirmation"
+                        v-if="authStore.errors.password_confirmation"
                         class="text-red-500 text-sm mt-1"
                     >
                         <div

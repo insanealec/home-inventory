@@ -1,23 +1,11 @@
 <script setup>
-import axios from "axios";
-import { ref } from 'vue';
-import { useRouter } from "vue-router";
+import { useAuthStore } from "../../stores/auth";
 
-const router = useRouter();
-const form = ref({});
-
-const logout = async () => {
-    try {
-        await axios.post('/logout', form.value);
-        window.location.href = '/';
-    } catch (error) {
-        console.error('Logout failed:', error);
-    }
-};
+const authStore = useAuthStore();
 </script>
 
 <template>
-  <form @submit.prevent="logout">
+  <form @submit.prevent="authStore.logout">
   <button
     type="submit"
   >
