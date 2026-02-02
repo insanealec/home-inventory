@@ -1,4 +1,21 @@
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+
+const loadTokens = async () => {
+    try {
+        const response = await axios.get("/api/tokens");
+        if (response.status === 200) {
+            const data = response.data;
+            console.log("User Tokens:", data);
+        } else {
+            console.error("Failed to load tokens:", response.statusText);
+        }
+    } catch (error) {
+        console.error("Error loading tokens:", error);
+    }
+};
+loadTokens();
+</script>
 
 <template>
     <div
