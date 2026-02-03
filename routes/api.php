@@ -12,4 +12,4 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/tokens', LoadTokens::class)->middleware('auth:sanctum');
 Route::post('/tokens', CreateToken::class)->middleware('auth:sanctum');
-Route::delete('/tokens/{token_id}', DestroyToken::class)->middleware('auth:sanctum');
+Route::delete('/tokens/{tokenId}', DestroyToken::class)->middleware('auth:sanctum');

@@ -22,10 +22,9 @@ class DestroyToken
         return $user->tokens->where('id', $tokenId)->first()?->delete() ?? false;
     }
 
-    public function asController(Request $request)
+    public function asController(Request $request, string $tokenId)
     {
         $user = $request->user();
-        $tokenId = $request->input('token_id');
 
         return $this->handle($user, $tokenId);
     }

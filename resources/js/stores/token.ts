@@ -7,7 +7,7 @@ export const useTokenStore = defineStore("token", () => {
     const tokens = ref<Array<any>>([]);
     const loadTokens = async () => {
         try {
-            const response = await axios.get("/tokens");
+            const response = await axios.get("/api/tokens");
             tokens.value = response.data;
         } catch (error) {
             console.error("Failed to load tokens:", error);
@@ -16,12 +16,16 @@ export const useTokenStore = defineStore("token", () => {
 
     const newToken = ref({
         name: "",
-        abilities: ['*'],
+        abilities: ["*"],
     });
     const storeToken = async () => {
+        if (!newToken.value.name.trim()) return;
         try {
-            const response = await axios.post("/tokens/create", newToken.value);
-            tokens.value.push(response.data);
+            const response = await axios.post("/api/tokens", newToken.value);
+            tokens.value.push(response.data.accessToken);
+            // TODO - make a modal with an easy copy button
+            alert(`New Token Created: ${response.data.plainTextToken}`);
+            newToken.value.name = ""; // Reset input after creation
         } catch (error) {
             console.error("Failed to create token:", error);
         }
@@ -29,8 +33,8 @@ export const useTokenStore = defineStore("token", () => {
 
     const destroyToken = async (tokenId: string) => {
         try {
-            await axios.post("/tokens/destroy", { token_id: tokenId });
-            tokens.value = tokens.value.filter(token => token.id !== tokenId);
+            await axios.delete(`/api/tokens/${tokenId}`);
+            tokens.value = tokens.value.filter((token) => token.id !== tokenId);
         } catch (error) {
             console.error("Failed to destroy token:", error);
         }
@@ -41,5 +45,6 @@ export const useTokenStore = defineStore("token", () => {
         loadTokens,
         storeToken,
         destroyToken,
+        newToken,
     };
 });
