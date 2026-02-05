@@ -1,11 +1,10 @@
 <script setup>
-import { useAuthStore } from '../stores/auth';
-import NavMain from './nav/NavMain.vue';
-import NavGuest from './nav/NavGuest.vue';
+import { useAuthStore } from "../stores/auth";
+import NavMain from "./nav/NavMain.vue";
+import NavGuest from "./nav/NavGuest.vue";
 
 const authStore = useAuthStore();
 authStore.setUser(window?.App?.user || null);
-
 </script>
 
 <template>
@@ -17,4 +16,3 @@ authStore.setUser(window?.App?.user || null);
         </main>
     </div>
 </template>
-

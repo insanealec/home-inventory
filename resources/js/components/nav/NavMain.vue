@@ -1,6 +1,5 @@
 <script setup>
-import LogoutButton from './LogoutButton.vue';
-
+import LogoutButton from "./LogoutButton.vue";
 </script>
 <template>
     <nav class="bg-white shadow dark:bg-gray-800">
@@ -16,10 +15,10 @@ import LogoutButton from './LogoutButton.vue';
                     </div>
                     <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
                         <router-link
-                            to="/"
+                            to="/dashboard"
                             class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-300"
                         >
-                            Home
+                            Dashboard
                         </router-link>
                         <router-link
                             to="/inventory"
@@ -39,7 +38,9 @@ import LogoutButton from './LogoutButton.vue';
                         >
                             Shopping Lists
                         </router-link>
-                        <logout-button class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-300" />
+                        <logout-button
+                            class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-300"
+                        />
                     </div>
                 </div>
             </div>

@@ -32,8 +32,14 @@ onMounted(() => {
                         class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         required
                     />
-                    <div v-if="authStore.errors.name" class="text-red-500 text-sm mt-1">
-                        <div v-for="(error, index) in authStore.errors.name" :key="index">
+                    <div
+                        v-if="authStore.errors.name"
+                        class="text-red-500 text-sm mt-1"
+                    >
+                        <div
+                            v-for="(error, index) in authStore.errors.name"
+                            :key="index"
+                        >
                             {{ error }}
                         </div>
                     </div>
@@ -51,7 +57,10 @@ onMounted(() => {
                         class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         required
                     />
-                    <div v-if="authStore.errors.email" class="text-red-500 text-sm mt-1">
+                    <div
+                        v-if="authStore.errors.email"
+                        class="text-red-500 text-sm mt-1"
+                    >
                         <div
                             v-for="(error, index) in authStore.errors.email"
                             :key="index"

@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\InventoryItem\LoadItems;
 use App\Actions\Token\CreateToken;
 use App\Actions\Token\DestroyToken;
 use App\Actions\Token\LoadTokens;
@@ -13,3 +14,5 @@ Route::get('/user', function (Request $request) {
 Route::get('/tokens', LoadTokens::class)->middleware('auth:sanctum');
 Route::post('/tokens', CreateToken::class)->middleware('auth:sanctum');
 Route::delete('/tokens/{tokenId}', DestroyToken::class)->middleware('auth:sanctum');
+
+Route::get('/inventory-items', LoadItems::class)->middleware('auth:sanctum');

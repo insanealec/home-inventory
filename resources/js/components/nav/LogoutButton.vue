@@ -5,11 +5,7 @@ const authStore = useAuthStore();
 </script>
 
 <template>
-  <form @submit.prevent="authStore.logout">
-  <button
-    type="submit"
-  >
-    Logout
-  </button>
-  </form>
+    <form @submit.prevent="authStore.logout">
+        <button type="submit">Logout</button>
+    </form>
 </template>

@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class InventoryItem extends Model
 {
@@ -26,6 +27,11 @@ class InventoryItem extends Model
         'user_id',
     ];
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function stockLocation()
     {
         return $this->belongsTo(StockLocation::class);
@@ -41,7 +47,7 @@ class InventoryItem extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            if (!$model->user_id) {
+            if (! $model->user_id) {
                 throw new \InvalidArgumentException('User ID is required');
             }
         });

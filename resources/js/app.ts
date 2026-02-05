@@ -1,24 +1,26 @@
-import './bootstrap';
-import { createPinia } from 'pinia';
-import { createApp } from 'vue';
-import { createRouter, createWebHistory } from 'vue-router';
+import "./bootstrap";
+import { createPinia } from "pinia";
+import { createApp } from "vue";
+import { createRouter, createWebHistory } from "vue-router";
 
 // Import CSS
-import '../css/app.css';
+import "../css/app.css";
 
 // Import components
-import App from './components/App.vue';
-import Welcome from './components/pages/Welcome.vue';
-import Login from './components/pages/auth/Login.vue';
-import Register from './components/pages/auth/Register.vue';
-import Dashboard from './components/pages/Dashboard.vue';
+import App from "./components/App.vue";
+import Welcome from "./components/pages/Welcome.vue";
+import Login from "./components/pages/auth/Login.vue";
+import Register from "./components/pages/auth/Register.vue";
+import Dashboard from "./components/pages/Dashboard.vue";
+import InventoryItems from "./components/pages/InventoryItems.vue";
 
 // Create router
 const routes = [
-    { path: '/', component: Welcome },
-    { path: '/register', component: Register },
-    { path: '/login', component: Login },
-    { path: '/dashboard', component: Dashboard}
+    { path: "/", component: Welcome },
+    { path: "/register", component: Register },
+    { path: "/login", component: Login },
+    { path: "/dashboard", component: Dashboard },
+    { path: "/inventory", component: InventoryItems },
 ];
 
 const router = createRouter({
@@ -34,4 +36,4 @@ const app = createApp(App);
 
 app.use(router);
 app.use(pinia);
-app.mount('#body');
+app.mount("#body");

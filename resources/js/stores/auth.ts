@@ -8,7 +8,7 @@ export const useAuthStore = defineStore("auth", () => {
     const isAuthenticated = computed(() => user.value !== null);
     const setUser = (authUser: User | null) => {
         user.value = authUser;
-    }
+    };
 
     const loginForm = ref({
         email: "",
@@ -46,18 +46,23 @@ export const useAuthStore = defineStore("auth", () => {
 
     const logout = async () => {
         try {
-            await axios.post('/logout', {});
+            await axios.post("/logout", {});
             redirectToHome();
         } catch (error) {
-            console.error('Logout failed:', error);
+            console.error("Logout failed:", error);
         }
     };
 
     const errors = ref({});
     const handleErrors = (error: any) => {
-        const axiosError = error as AxiosError<{ message: string; errors: Record<string, string[]> }>;
+        const axiosError = error as AxiosError<{
+            message: string;
+            errors: Record<string, string[]>;
+        }>;
         if (axiosError.response && axiosError.response.status === 422) {
-            console.error(axiosError?.response?.data?.message || "Validation error");
+            console.error(
+                axiosError?.response?.data?.message || "Validation error",
+            );
             errors.value = axiosError?.response?.data?.errors ?? [];
         }
     };

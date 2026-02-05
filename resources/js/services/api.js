@@ -2,18 +2,18 @@
 class ApiService {
     constructor() {
         // Base URL for the API (adjust if needed)
-        this.baseURL = '/api';
+        this.baseURL = "/api";
         // Set up default headers
         this.headers = {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
         };
 
         // Add CSRF token if available
         const token = document.head.querySelector('meta[name="csrf-token"]');
         if (token) {
-            this.headers['X-CSRF-TOKEN'] = token.content;
+            this.headers["X-CSRF-TOKEN"] = token.content;
         }
     }
 
@@ -25,7 +25,7 @@ class ApiService {
         );
 
         const response = await fetch(url, {
-            method: 'GET',
+            method: "GET",
             headers: this.headers,
         });
 
@@ -35,7 +35,7 @@ class ApiService {
     // Generic POST request
     async post(endpoint, data = {}) {
         const response = await fetch(`${this.baseURL}${endpoint}`, {
-            method: 'POST',
+            method: "POST",
             headers: this.headers,
             body: JSON.stringify(data),
         });
@@ -46,7 +46,7 @@ class ApiService {
     // Generic PUT request
     async put(endpoint, data = {}) {
         const response = await fetch(`${this.baseURL}${endpoint}`, {
-            method: 'PUT',
+            method: "PUT",
             headers: this.headers,
             body: JSON.stringify(data),
         });
@@ -57,7 +57,7 @@ class ApiService {
     // Generic DELETE request
     async delete(endpoint) {
         const response = await fetch(`${this.baseURL}${endpoint}`, {
-            method: 'DELETE',
+            method: "DELETE",
             headers: this.headers,
         });
 

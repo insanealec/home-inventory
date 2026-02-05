@@ -28,7 +28,7 @@ return new class extends Migration
             $table->date('expiration_date')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
-            
+
             $table->foreign('stock_location_id')->references('id')->on('stock_locations')->onDelete('set null');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

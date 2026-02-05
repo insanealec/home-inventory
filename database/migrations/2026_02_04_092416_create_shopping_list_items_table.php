@@ -25,7 +25,7 @@ return new class extends Migration
             $table->unsignedBigInteger('inventory_item_id')->nullable();
             $table->integer('sort_order')->default(0);
             $table->timestamps();
-            
+
             $table->foreign('shopping_list_id')->references('id')->on('shopping_lists')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('shopping_categories')->onDelete('set null');
             $table->foreign('inventory_item_id')->references('id')->on('inventory_items')->onDelete('set null');

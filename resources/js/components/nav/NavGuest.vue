@@ -1,6 +1,5 @@
 <script setup>
-import LogoutButton from './LogoutButton.vue';
-
+import LogoutButton from "./LogoutButton.vue";
 </script>
 <template>
     <nav class="bg-white shadow dark:bg-gray-800">
