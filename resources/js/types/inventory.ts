@@ -4,7 +4,7 @@ export type InventoryItem = {
     id: number;
     name: string;
     sku: string;
-    stock_location_id: number;
+    stock_location_id: number | null;
     position: string;
     description: string;
     quantity: number;
