@@ -48,10 +48,7 @@ const submitForm = async () => {
         errors.value = {};
 
         // Submit the form
-        const response = await axios.post(
-            CreateItem.url(),
-            formData.value,
-        );
+        const response = await axios.post(CreateItem.url(), formData.value);
 
         // Redirect to inventory items list on success
         router.push("/inventory");
