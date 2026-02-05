@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import Content from "../../common/Content.vue";
 import Card from "../../common/Card.vue";
 import LoadItems from "../../../actions/App/Actions/InventoryItem/LoadItems";
@@ -10,6 +11,8 @@ import { InventoryItem } from "../../../types/inventory";
 const paginator = ref({} as Pagination);
 const sortField = ref<string | null>(null);
 const sortDirection = ref<"asc" | "desc">("asc");
+const router = useRouter();
+const route = useRoute();
 
 const loadItems = async (page: number = 1) => {
     try {
@@ -41,7 +44,17 @@ watch([sortField, sortDirection], () => {
     loadItems(1);
 });
 
-loadItems();
+// Load items when route changes (for page parameter)
+watch(
+    () => route.query.page,
+    (newPage) => {
+        const page = newPage ? parseInt(newPage as string) : 1;
+        loadItems(page);
+    },
+);
+
+// Initial load
+loadItems(parseInt(route.query.page as string) || 1);
 </script>
 
 <template>
@@ -207,23 +220,24 @@ loadItems();
                         </p>
                     </div>
                     <div class="flex-1 flex justify-between sm:justify-end">
-                        <a
+                        <RouterLink
                             v-for="link in paginator.links"
                             :key="link.label"
-                            :href="link.url"
-                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
+                            :to="{
+                                path: '/inventory',
+                                query: { page: link.url ? link.page : paginator.current_page },
+                            }"
                             :class="{
+                                'relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700':
+                                    link.url,
+                                'relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-800 cursor-not-allowed':
+                                    !link.url,
                                 'bg-gray-100 dark:bg-gray-700': link.active,
                             }"
-                            @click.prevent="
-                                link.url &&
-                                loadItems(
-                                    parseInt(link.page as unknown as string),
-                                )
-                            "
-                            v-html="link.label"
+                            :disabled="!link.url"
                         >
-                        </a>
+                            <span v-html="link.label"></span>
+                        </RouterLink>
                     </div>
                 </nav>
             </div>
