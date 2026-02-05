@@ -12,7 +12,7 @@ import Welcome from "./components/pages/Welcome.vue";
 import Login from "./components/pages/auth/Login.vue";
 import Register from "./components/pages/auth/Register.vue";
 import Dashboard from "./components/pages/Dashboard.vue";
-import InventoryItems from "./components/pages/InventoryItems.vue";
+import InventoryIndex from "./components/pages/inventory-items/Index.vue";
 
 // Create router
 const routes = [
@@ -20,7 +20,7 @@ const routes = [
     { path: "/register", component: Register },
     { path: "/login", component: Login },
     { path: "/dashboard", component: Dashboard },
-    { path: "/inventory", component: InventoryItems },
+    { path: "/inventory", component: InventoryIndex },
 ];
 
 const router = createRouter({
