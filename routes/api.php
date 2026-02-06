@@ -1,7 +1,7 @@
 <?php
 
-use App\Actions\InventoryItem\LoadItems;
 use App\Actions\InventoryItem\CreateItem;
+use App\Actions\InventoryItem\LoadItems;
 use App\Actions\Token\CreateToken;
 use App\Actions\Token\DestroyToken;
 use App\Actions\Token\LoadTokens;
