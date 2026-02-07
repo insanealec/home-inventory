@@ -42,6 +42,19 @@ const handleSort = (field: string) => {
     loadItems(1);
 };
 
+const deleteItem = async (item: InventoryItem) => {
+    if (!confirm(`Are you sure you want to delete "${item.name}"?`)) {
+        return;
+    }
+
+    try {
+        await axios.delete(`/api/inventory-items/${item.id}`);
+        loadItems(parseInt(route.query.page as string) || 1);
+    } catch (error) {
+        console.error("Error deleting inventory item:", error);
+    }
+};
+
 // Load items when sort changes
 watch([sortField, sortDirection], () => {
     loadItems(1);
@@ -155,6 +168,12 @@ loadItems(parseInt(route.query.page as string) || 1);
                                     </span>
                                 </div>
                             </th>
+                            <th
+                                scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                            >
+                                Actions
+                            </th>
                         </tr>
                     </thead>
                     <tbody
@@ -189,6 +208,22 @@ loadItems(parseInt(route.query.page as string) || 1);
                                 class="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100"
                             >
                                 {{ item.created_at }}
+                            </td>
+                            <td
+                                class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2"
+                            >
+                                <router-link
+                                    :to="`/inventory/${item.id}`"
+                                    class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300"
+                                >
+                                    View
+                                </router-link>
+                                <button
+                                    @click="deleteItem(item)"
+                                    class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
+                                >
+                                    Delete
+                                </button>
                             </td>
                         </tr>
                     </tbody>
