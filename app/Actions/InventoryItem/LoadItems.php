@@ -2,24 +2,10 @@
 
 namespace App\Actions\InventoryItem;
 
+use App\Data\InventoryItem\LoadItemsFilters;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Lorisleiva\Actions\Concerns\AsAction;
-
-class LoadItemsFilters
-{
-    public $search;
-
-    public $stockLocationId;
-
-    public $sortBy;
-
-    public $sortDirection;
-
-    public $page;
-
-    public $perPage;
-}
 
 class LoadItems
 {
@@ -49,14 +35,6 @@ class LoadItems
 
     public function asController(Request $request)
     {
-        $filters = new LoadItemsFilters;
-        $filters->search = $request->input('search');
-        $filters->stockLocationId = $request->input('stock_location_id');
-        $filters->sortBy = $request->input('sort_by', 'created_at');
-        $filters->sortDirection = $request->input('sort_direction', 'desc');
-        $filters->page = $request->input('page', 1);
-        $filters->perPage = $request->input('per_page', 15);
-
-        return $this->handle($request->user(), $filters);
+        return $this->handle($request->user(), LoadItemsFilters::fromRequest($request));
     }
 }
