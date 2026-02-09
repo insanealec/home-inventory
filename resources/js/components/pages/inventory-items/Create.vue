@@ -5,30 +5,13 @@ import Content from "../../common/Content.vue";
 import Card from "../../common/Card.vue";
 import axios from "axios";
 import type { InventoryItem } from "../../../types/inventory";
+import { createInventoryItem } from "../../../types/inventory";
 import CreateItem from "../../../actions/App/Actions/InventoryItem/CreateItem";
 
 const router = useRouter();
 
 // Form data
-const formData = ref<InventoryItem>({
-    id: 0,
-    name: "",
-    sku: "",
-    stock_location_id: null,
-    position: "",
-    description: "",
-    quantity: 0,
-    reorder_point: 0,
-    reorder_quantity: 0,
-    min_stock_level: 0,
-    max_stock_level: 0,
-    unit_price: 0,
-    unit: "",
-    expiration_date: null,
-    user_id: 0,
-    created_at: "",
-    updated_at: "",
-});
+const formData = ref<InventoryItem>(createInventoryItem());
 
 // Validation errors
 const errors = ref<Record<string, string>>({});

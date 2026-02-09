@@ -1,7 +1,7 @@
 import { User } from "./auth";
 
 export type InventoryItem = {
-    id: number;
+    id: number | null;
     name: string;
     sku: string;
     stock_location_id: number | null;
@@ -21,6 +21,28 @@ export type InventoryItem = {
     stock_location?: StockLocation;
     user?: User;
 };
+
+export function createInventoryItem(): InventoryItem {
+    return {
+        id: null,
+        name: "",
+        sku: "",
+        stock_location_id: null,
+        position: "",
+        description: "",
+        quantity: 0,
+        reorder_point: 0,
+        reorder_quantity: 0,
+        min_stock_level: 0,
+        max_stock_level: 0,
+        unit_price: 0,
+        unit: "",
+        expiration_date: null,
+        user_id: 0,
+        created_at: "",
+        updated_at: "",
+    };
+}
 
 export type StockLocation = {
     id: number;
