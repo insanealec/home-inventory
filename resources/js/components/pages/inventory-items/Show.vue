@@ -1,64 +1,36 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import Content from "../../common/Content.vue";
 import Card from "../../common/Card.vue";
-import axios from "axios";
-import type { InventoryItem } from "../../../types/inventory";
+import { useInventoryStore } from "../../../stores/inventory";
+
+const store = useInventoryStore();
 
 const router = useRouter();
 const route = useRoute();
 
-const item = ref<InventoryItem | null>(null);
-const loading = ref(true);
-const deleting = ref(false);
-
-const loadItem = async () => {
-    try {
-        const itemId = route.params.id as string;
-        const response = await axios.get(`/api/inventory-items/${itemId}`);
-        item.value = response.data;
-    } catch (error) {
-        console.error("Error loading inventory item:", error);
-    } finally {
-        loading.value = false;
-    }
-};
-
 const deleteItem = async () => {
-    if (!item.value) {
-        return;
-    }
-
-    if (!confirm("Are you sure you want to delete this inventory item?")) {
-        return;
-    }
-
-    try {
-        deleting.value = true;
-        await axios.delete(`/api/inventory-items/${item.value.id}`);
+    if (!store.item) return;
+    if (await store.deleteItem(store.item.id as number)) {
         router.push("/inventory");
-    } catch (error) {
-        console.error("Error deleting inventory item:", error);
-    } finally {
-        deleting.value = false;
     }
 };
 
 onMounted(() => {
-    loadItem();
+    store.loadItem(parseInt(route.params.id as string));
 });
 </script>
 
 <template>
     <Content>
-        <Card v-if="loading">
+        <Card v-if="store.loading">
             <template #title>Loading...</template>
             <p>Loading inventory item details...</p>
         </Card>
 
-        <Card v-else-if="item">
-            <template #title>{{ item.name }}</template>
+        <Card v-else-if="store.item">
+            <template #title>{{ store.item.name }}</template>
 
             <div class="space-y-6">
                 <!-- Basic Information -->
@@ -68,7 +40,7 @@ onMounted(() => {
                             SKU
                         </label>
                         <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                            {{ item.sku || "N/A" }}
+                            {{ store.item.sku || "N/A" }}
                         </p>
                     </div>
 
@@ -77,7 +49,7 @@ onMounted(() => {
                             Stock Location
                         </label>
                         <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                            {{ item.stock_location?.name || "N/A" }}
+                            {{ store.item.stock_location?.name || "N/A" }}
                         </p>
                     </div>
 
@@ -86,18 +58,18 @@ onMounted(() => {
                             Position
                         </label>
                         <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                            {{ item.position || "N/A" }}
+                            {{ store.item.position || "N/A" }}
                         </p>
                     </div>
                 </div>
 
                 <!-- Description -->
-                <div v-if="item.description">
+                <div v-if="store.item.description">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                         Description
                     </label>
                     <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                        {{ item.description }}
+                        {{ store.item.description }}
                     </p>
                 </div>
 
@@ -108,7 +80,7 @@ onMounted(() => {
                             Current Quantity
                         </label>
                         <p class="mt-1 text-lg font-semibold text-gray-900 dark:text-gray-100">
-                            {{ item.quantity }}
+                            {{ store.item.quantity }}
                         </p>
                     </div>
 
@@ -117,7 +89,7 @@ onMounted(() => {
                             Reorder Point
                         </label>
                         <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                            {{ item.reorder_point }}
+                            {{ store.item.reorder_point }}
                         </p>
                     </div>
 
@@ -126,7 +98,7 @@ onMounted(() => {
                             Reorder Quantity
                         </label>
                         <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                            {{ item.reorder_quantity }}
+                            {{ store.item.reorder_quantity }}
                         </p>
                     </div>
 
@@ -135,7 +107,7 @@ onMounted(() => {
                             Unit Price
                         </label>
                         <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                            ${{ Number(item.unit_price).toFixed(2) }}
+                            ${{ Number(store.item.unit_price).toFixed(2) }}
                         </p>
                     </div>
                 </div>
@@ -147,7 +119,7 @@ onMounted(() => {
                             Minimum Stock Level
                         </label>
                         <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                            {{ item.min_stock_level }}
+                            {{ store.item.min_stock_level }}
                         </p>
                     </div>
 
@@ -156,7 +128,7 @@ onMounted(() => {
                             Maximum Stock Level
                         </label>
                         <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                            {{ item.max_stock_level }}
+                            {{ store.item.max_stock_level }}
                         </p>
                     </div>
 
@@ -165,19 +137,19 @@ onMounted(() => {
                             Unit
                         </label>
                         <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                            {{ item.unit || "N/A" }}
+                            {{ store.item.unit || "N/A" }}
                         </p>
                     </div>
                 </div>
 
                 <!-- Expiration Date & Timestamps -->
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
-                    <div v-if="item.expiration_date">
+                    <div v-if="store.item.expiration_date">
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                             Expiration Date
                         </label>
                         <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                            {{ item.expiration_date }}
+                            {{ store.item.expiration_date }}
                         </p>
                     </div>
 
@@ -186,7 +158,7 @@ onMounted(() => {
                             Created At
                         </label>
                         <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                            {{ item.created_at }}
+                            {{ store.item.created_at }}
                         </p>
                     </div>
 
@@ -195,7 +167,7 @@ onMounted(() => {
                             Updated At
                         </label>
                         <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                            {{ item.updated_at }}
+                            {{ store.item.updated_at }}
                         </p>
                     </div>
                 </div>
@@ -212,10 +184,10 @@ onMounted(() => {
                     <button
                         type="button"
                         @click="deleteItem"
-                        :disabled="deleting"
+                        :disabled="store.deleting"
                         class="px-4 py-2 bg-red-600 text-white rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {{ deleting ? "Deleting..." : "Delete" }}
+                        {{ store.deleting ? "Deleting..." : "Delete" }}
                     </button>
                 </div>
             </div>
