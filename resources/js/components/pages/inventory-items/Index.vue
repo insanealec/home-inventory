@@ -8,29 +8,13 @@ import axios from "axios";
 import { Pagination } from "../../../types/common";
 import { InventoryItem } from "../../../types/inventory";
 import Paginator from "../../common/Paginator.vue";
+import { useInventoryStore } from "../../../stores/inventory";
 
-const paginator = ref<Pagination<InventoryItem>>({
-    data: <InventoryItem[]>[],
-} as Pagination<InventoryItem>);
+const store = useInventoryStore();
+
 const sortField = ref<string | null>(null);
 const sortDirection = ref<"asc" | "desc">("asc");
-const router = useRouter();
 const route = useRoute();
-
-const loadItems = async (page: number = 1) => {
-    try {
-        const params: any = { page };
-        if (sortField.value) {
-            params.sort = sortField.value;
-            params.direction = sortDirection.value;
-        }
-        const response = await axios.get(LoadItems.url(), { params });
-        paginator.value = response.data;
-        console.log("Inventory items loaded:", paginator.value);
-    } catch (error) {
-        console.error("Error loading inventory items:", error);
-    }
-};
 
 const handleSort = (field: string) => {
     if (sortField.value === field) {
@@ -39,25 +23,22 @@ const handleSort = (field: string) => {
         sortField.value = field;
         sortDirection.value = "asc";
     }
-    loadItems(1);
+    store.loadItems(1, sortField.value, sortDirection.value);
 };
 
-const deleteItem = async (item: InventoryItem) => {
-    if (!confirm(`Are you sure you want to delete "${item.name}"?`)) {
-        return;
-    }
+const loadThisPage = () => {
+    const page = route.query.page ? parseInt(route.query.page as string) : 1;
+    store.loadItems(page, sortField.value, sortDirection.value);
+};
 
-    try {
-        await axios.delete(`/api/inventory-items/${item.id}`);
-        loadItems(parseInt(route.query.page as string) || 1);
-    } catch (error) {
-        console.error("Error deleting inventory item:", error);
-    }
+const deleteItem = async (id: number) => {
+    await store.deleteItem(id);
+    loadThisPage();
 };
 
 // Load items when sort changes
 watch([sortField, sortDirection], () => {
-    loadItems(1);
+    store.loadItems(1, sortField.value, sortDirection.value);
 });
 
 // Load items when route changes (for page parameter)
@@ -65,12 +46,12 @@ watch(
     () => route.query.page,
     (newPage) => {
         const page = newPage ? parseInt(newPage as string) : 1;
-        loadItems(page);
+        store.loadItems(page, sortField.value, sortDirection.value);
     },
 );
 
 // Initial load
-loadItems(parseInt(route.query.page as string) || 1);
+loadThisPage();
 </script>
 
 <template>
@@ -180,8 +161,8 @@ loadItems(parseInt(route.query.page as string) || 1);
                         class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700"
                     >
                         <tr
-                            v-for="item in paginator.data"
-                            :key="item.id"
+                            v-for="item in store.paginator.data"
+                            :key="item.id as number"
                             class="hover:bg-gray-50 dark:hover:bg-gray-800"
                         >
                             <td
@@ -219,7 +200,7 @@ loadItems(parseInt(route.query.page as string) || 1);
                                     View
                                 </router-link>
                                 <button
-                                    @click="deleteItem(item)"
+                                    @click="deleteItem(item.id as number)"
                                     class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
                                 >
                                     Delete
@@ -230,7 +211,7 @@ loadItems(parseInt(route.query.page as string) || 1);
                 </table>
             </div>
             <!-- Pagination Controls -->
-            <Paginator :paginator="paginator" />
+            <Paginator :paginator="store.paginator" />
         </Card>
     </Content>
 </template>
