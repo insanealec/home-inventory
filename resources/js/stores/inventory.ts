@@ -61,7 +61,9 @@ export const useInventoryStore = defineStore("inventory", () => {
     const createItem = async () => {
         try {
             creating.value = true;
-            const response = await axios.post(CreateItem.url(), { inventory_item: item.value });
+            const response = await axios.post(CreateItem.url(), {
+                inventory_item: item.value,
+            });
             return response.data;
         } catch (error) {
             console.error("Error creating inventory item:", error);
@@ -72,10 +74,12 @@ export const useInventoryStore = defineStore("inventory", () => {
     };
 
     const updateItem = async () => {
-      if (!item.value?.id) return false;
+        if (!item.value?.id) return false;
         try {
             updating.value = true;
-            const response = await axios.put(LoadItem.url(item.value.id), { inventory_item: item.value });
+            const response = await axios.put(LoadItem.url(item.value.id), {
+                inventory_item: item.value,
+            });
             return response.data;
         } catch (error) {
             console.error("Error updating inventory item:", error);

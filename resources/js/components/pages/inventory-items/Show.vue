@@ -34,30 +34,44 @@ onMounted(() => {
 
             <div class="space-y-6">
                 <!-- Basic Information -->
-                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div
+                    class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+                >
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
                             SKU
                         </label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                        <p
+                            class="mt-1 text-sm text-gray-900 dark:text-gray-100"
+                        >
                             {{ store.item.sku || "N/A" }}
                         </p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
                             Stock Location
                         </label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                        <p
+                            class="mt-1 text-sm text-gray-900 dark:text-gray-100"
+                        >
                             {{ store.item.stock_location?.name || "N/A" }}
                         </p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
                             Position
                         </label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                        <p
+                            class="mt-1 text-sm text-gray-900 dark:text-gray-100"
+                        >
                             {{ store.item.position || "N/A" }}
                         </p>
                     </div>
@@ -65,7 +79,9 @@ onMounted(() => {
 
                 <!-- Description -->
                 <div v-if="store.item.description">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <label
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
                         Description
                     </label>
                     <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
@@ -74,69 +90,101 @@ onMounted(() => {
                 </div>
 
                 <!-- Quantity & Stock Levels -->
-                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                <div
+                    class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+                >
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
                             Current Quantity
                         </label>
-                        <p class="mt-1 text-lg font-semibold text-gray-900 dark:text-gray-100">
+                        <p
+                            class="mt-1 text-lg font-semibold text-gray-900 dark:text-gray-100"
+                        >
                             {{ store.item.quantity }}
                         </p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
                             Reorder Point
                         </label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                        <p
+                            class="mt-1 text-sm text-gray-900 dark:text-gray-100"
+                        >
                             {{ store.item.reorder_point }}
                         </p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
                             Reorder Quantity
                         </label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                        <p
+                            class="mt-1 text-sm text-gray-900 dark:text-gray-100"
+                        >
                             {{ store.item.reorder_quantity }}
                         </p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
                             Unit Price
                         </label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                        <p
+                            class="mt-1 text-sm text-gray-900 dark:text-gray-100"
+                        >
                             ${{ Number(store.item.unit_price).toFixed(2) }}
                         </p>
                     </div>
                 </div>
 
                 <!-- Stock Level Constraints -->
-                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div
+                    class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+                >
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
                             Minimum Stock Level
                         </label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                        <p
+                            class="mt-1 text-sm text-gray-900 dark:text-gray-100"
+                        >
                             {{ store.item.min_stock_level }}
                         </p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
                             Maximum Stock Level
                         </label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                        <p
+                            class="mt-1 text-sm text-gray-900 dark:text-gray-100"
+                        >
                             {{ store.item.max_stock_level }}
                         </p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
                             Unit
                         </label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                        <p
+                            class="mt-1 text-sm text-gray-900 dark:text-gray-100"
+                        >
                             {{ store.item.unit || "N/A" }}
                         </p>
                     </div>
@@ -145,35 +193,49 @@ onMounted(() => {
                 <!-- Expiration Date & Timestamps -->
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
                     <div v-if="store.item.expiration_date">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
                             Expiration Date
                         </label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                        <p
+                            class="mt-1 text-sm text-gray-900 dark:text-gray-100"
+                        >
                             {{ store.item.expiration_date }}
                         </p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
                             Created At
                         </label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                        <p
+                            class="mt-1 text-sm text-gray-900 dark:text-gray-100"
+                        >
                             {{ store.item.created_at }}
                         </p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
                             Updated At
                         </label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                        <p
+                            class="mt-1 text-sm text-gray-900 dark:text-gray-100"
+                        >
                             {{ store.item.updated_at }}
                         </p>
                     </div>
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <div
+                    class="flex justify-end space-x-4 pt-6 border-t border-gray-200 dark:border-gray-700"
+                >
                     <button
                         type="button"
                         @click="router.back()"
@@ -195,7 +257,9 @@ onMounted(() => {
 
         <Card v-else>
             <template #title>Not Found</template>
-            <p class="text-gray-900 dark:text-gray-100">Inventory item not found.</p>
+            <p class="text-gray-900 dark:text-gray-100">
+                Inventory item not found.
+            </p>
             <button
                 type="button"
                 @click="router.push('/inventory')"

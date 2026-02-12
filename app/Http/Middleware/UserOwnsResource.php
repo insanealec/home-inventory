@@ -19,14 +19,14 @@ class UserOwnsResource
     {
         $user = $request->user();
 
-        if (!$user) {
+        if (! $user) {
             return $next($request);
         }
 
         foreach ($request->route()->parameters() as $parameter) {
             if ($parameter instanceof Model && property_exists($parameter, 'user_id')) {
                 if ($parameter->user_id !== $user->id) {
-                    throw new AuthorizationException();
+                    throw new AuthorizationException;
                 }
             }
         }

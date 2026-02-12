@@ -1,12 +1,8 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRoute } from "vue-router";
 import Content from "../../common/Content.vue";
 import Card from "../../common/Card.vue";
-import LoadItems from "../../../actions/App/Actions/InventoryItem/LoadItems";
-import axios from "axios";
-import { Pagination } from "../../../types/common";
-import { InventoryItem } from "../../../types/inventory";
 import Paginator from "../../common/Paginator.vue";
 import { useInventoryStore } from "../../../stores/inventory";
 
