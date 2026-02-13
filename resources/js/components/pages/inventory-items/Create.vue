@@ -58,7 +58,6 @@ const submitForm = async () => {
                         :error="store.errors.sku ? store.errors.sku[0] : ''"
                     />
 
-
                     <div>
                         <label
                             for="stock_location_id"
@@ -93,7 +92,11 @@ const submitForm = async () => {
                         label="Position"
                         field="item.position"
                         :store="store"
-                        :error="store.errors.position ? store.errors.position[0] : ''"
+                        :error="
+                            store.errors.position
+                                ? store.errors.position[0]
+                                : ''
+                        "
                     />
                 </div>
 
@@ -130,7 +133,11 @@ const submitForm = async () => {
                         :store="store"
                         type="number"
                         :min="0"
-                        :error="store.errors.quantity ? store.errors.quantity[0] : ''"
+                        :error="
+                            store.errors.quantity
+                                ? store.errors.quantity[0]
+                                : ''
+                        "
                     />
 
                     <FormInput
@@ -140,7 +147,11 @@ const submitForm = async () => {
                         :store="store"
                         type="number"
                         :min="0"
-                        :error="store.errors.reorder_point ? store.errors.reorder_point[0] : ''"
+                        :error="
+                            store.errors.reorder_point
+                                ? store.errors.reorder_point[0]
+                                : ''
+                        "
                     />
 
                     <FormInput
@@ -150,7 +161,11 @@ const submitForm = async () => {
                         :store="store"
                         type="number"
                         :min="0"
-                        :error="store.errors.reorder_quantity ? store.errors.reorder_quantity[0] : ''"
+                        :error="
+                            store.errors.reorder_quantity
+                                ? store.errors.reorder_quantity[0]
+                                : ''
+                        "
                     />
 
                     <FormInput
@@ -161,9 +176,12 @@ const submitForm = async () => {
                         type="number"
                         :min="0"
                         :step="0.01"
-                        :error="store.errors.unit_price ? store.errors.unit_price[0] : ''"
+                        :error="
+                            store.errors.unit_price
+                                ? store.errors.unit_price[0]
+                                : ''
+                        "
                     />
-
                 </div>
 
                 <!-- Stock Level Constraints -->
@@ -175,7 +193,11 @@ const submitForm = async () => {
                         :store="store"
                         type="number"
                         :min="0"
-                        :error="store.errors.min_stock_level ? store.errors.min_stock_level[0] : ''"
+                        :error="
+                            store.errors.min_stock_level
+                                ? store.errors.min_stock_level[0]
+                                : ''
+                        "
                     />
 
                     <FormInput
@@ -185,7 +207,11 @@ const submitForm = async () => {
                         :store="store"
                         type="number"
                         :min="0"
-                        :error="store.errors.max_stock_level ? store.errors.max_stock_level[0] : ''"
+                        :error="
+                            store.errors.max_stock_level
+                                ? store.errors.max_stock_level[0]
+                                : ''
+                        "
                     />
                 </div>
 
@@ -205,7 +231,11 @@ const submitForm = async () => {
                         field="expiration_date"
                         :store="store"
                         type="date"
-                        :error="store.errors.expiration_date ? store.errors.expiration_date[0] : ''"
+                        :error="
+                            store.errors.expiration_date
+                                ? store.errors.expiration_date[0]
+                                : ''
+                        "
                     />
                 </div>
 

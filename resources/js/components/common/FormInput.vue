@@ -14,16 +14,16 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-    'update:modelValue': [value: any];
+    "update:modelValue": [value: any];
 }>();
 
 // Helper to get/set nested object values using dot notation (e.g., "item.name")
 const getNestedValue = (obj: any, path: string): any => {
-    return path.split('.').reduce((current, key) => current?.[key], obj);
+    return path.split(".").reduce((current, key) => current?.[key], obj);
 };
 
 const setNestedValue = (obj: any, path: string, value: any): void => {
-    const keys = path.split('.');
+    const keys = path.split(".");
     const lastKey = keys.pop();
     const target = keys.reduce((current, key) => current[key], obj);
     if (lastKey) {
@@ -43,7 +43,7 @@ const fieldValue = computed({
         if (props.field && props.store) {
             setNestedValue(props.store, props.field, value);
         } else {
-            emit('update:modelValue', value);
+            emit("update:modelValue", value);
         }
     },
 });
@@ -65,10 +65,7 @@ const fieldValue = computed({
             :step="step || undefined"
             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
         />
-        <p
-            v-if="error"
-            class="mt-1 text-sm text-red-600"
-        >
+        <p v-if="error" class="mt-1 text-sm text-red-600">
             {{ error }}
         </p>
     </div>
