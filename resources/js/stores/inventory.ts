@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import axios from "axios";
-import type { InventoryItem } from "../types/inventory";
+import { createInventoryItem, type InventoryItem } from "../types/inventory";
 import { Pagination } from "../types/common";
 import CreateItem from "../actions/App/Actions/InventoryItem/CreateItem";
 import LoadItems from "../actions/App/Actions/InventoryItem/LoadItems";
@@ -9,8 +9,6 @@ import LoadItem from "../actions/App/Actions/InventoryItem/LoadItem";
 import DeleteItem from "../actions/App/Actions/InventoryItem/DeleteItem";
 
 export const useInventoryStore = defineStore("inventory", () => {
-    const items = ref<InventoryItem[]>([]);
-    const item = ref<InventoryItem | null>(null);
     const paginator = ref<Pagination<InventoryItem>>({
         data: [],
         current_page: 1,
@@ -19,6 +17,8 @@ export const useInventoryStore = defineStore("inventory", () => {
         total: 0,
         links: [],
     } as Pagination<InventoryItem>);
+    const item = ref<InventoryItem | null>(null);
+    const errors = ref<Record<string, string>>({});
     const loading = ref(false);
     const creating = ref(false);
     const updating = ref(false);
@@ -38,7 +38,6 @@ export const useInventoryStore = defineStore("inventory", () => {
             }
             const response = await axios.get(LoadItems.url(), { params });
             paginator.value = response.data;
-            items.value = response.data.data;
         } catch (error) {
             console.error("Error loading inventory items:", error);
         } finally {
@@ -58,16 +57,24 @@ export const useInventoryStore = defineStore("inventory", () => {
         }
     };
 
+    const initItem = () => {
+        item.value = createInventoryItem();
+    };
+
     const createItem = async () => {
         try {
             creating.value = true;
-            const response = await axios.post(CreateItem.url(), {
-                inventory_item: item.value,
-            });
-            return response.data;
-        } catch (error) {
+            // Reset errors
+            errors.value = {};
+            const response = await axios.post(CreateItem.url(), item.value);
+            return true;
+        } catch (error: any) {
+            if (error.response && error.response.data.errors) {
+                // Handle validation errors
+                errors.value = error.response.data.errors;
+            }
             console.error("Error creating inventory item:", error);
-            throw error;
+            return false;
         } finally {
             creating.value = false;
         }
@@ -103,15 +110,16 @@ export const useInventoryStore = defineStore("inventory", () => {
     };
 
     return {
-        items,
-        item,
         paginator,
+        item,
+        errors,
         loading,
         creating,
         updating,
         deleting,
         loadItems,
         loadItem,
+        initItem,
         createItem,
         updateItem,
         deleteItem,

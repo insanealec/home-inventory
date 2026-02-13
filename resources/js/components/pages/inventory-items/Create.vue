@@ -3,20 +3,16 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Content from "../../common/Content.vue";
 import Card from "../../common/Card.vue";
-import axios from "axios";
-import type { InventoryItem } from "../../../types/inventory";
-import { createInventoryItem } from "../../../types/inventory";
-import CreateItem from "../../../actions/App/Actions/InventoryItem/CreateItem";
+import { useInventoryStore } from "../../../stores/inventory";
+
+const store = useInventoryStore();
 
 const router = useRouter();
 
-// Form data
-const formData = ref<InventoryItem>(createInventoryItem());
+// Initialize form
+store.initItem();
 
-// Validation errors
-const errors = ref<Record<string, string>>({});
-
-// Stock locations for dropdown
+// Temp Stock locations for dropdown
 const stockLocations = ref([
     { id: 1, name: "Basement" },
     { id: 2, name: "Garage" },
@@ -26,23 +22,9 @@ const stockLocations = ref([
 
 // Handle form submission
 const submitForm = async () => {
-    try {
-        // Reset errors
-        errors.value = {};
-
-        // Submit the form
-        const response = await axios.post(CreateItem.url(), formData.value);
-
-        // Redirect to inventory items list on success
-        router.push("/inventory");
-    } catch (error: any) {
-        if (error.response && error.response.data.errors) {
-            // Handle validation errors
-            errors.value = error.response.data.errors;
-        } else {
-            console.error("Error creating inventory item:", error);
-        }
-    }
+    if (!(await store.createItem())) return;
+    // Redirect to inventory items list on success
+    router.push("/inventory");
 };
 </script>
 
@@ -51,7 +33,11 @@ const submitForm = async () => {
         <Card>
             <template #title>Create New Inventory Item</template>
 
-            <form @submit.prevent="submitForm" class="space-y-6">
+            <form
+                v-if="store.item"
+                @submit.prevent="submitForm"
+                class="space-y-6"
+            >
                 <!-- Required Fields -->
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <div>
@@ -63,13 +49,16 @@ const submitForm = async () => {
                         </label>
                         <input
                             id="name"
-                            v-model="formData.name"
+                            v-model="store.item.name"
                             type="text"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                             required
                         />
-                        <p v-if="errors.name" class="mt-1 text-sm text-red-600">
-                            {{ errors.name[0] }}
+                        <p
+                            v-if="store.errors.name"
+                            class="mt-1 text-sm text-red-600"
+                        >
+                            {{ store.errors.name[0] }}
                         </p>
                     </div>
 
@@ -82,12 +71,15 @@ const submitForm = async () => {
                         </label>
                         <input
                             id="sku"
-                            v-model="formData.sku"
+                            v-model="store.item.sku"
                             type="text"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                         />
-                        <p v-if="errors.sku" class="mt-1 text-sm text-red-600">
-                            {{ errors.sku[0] }}
+                        <p
+                            v-if="store.errors.sku"
+                            class="mt-1 text-sm text-red-600"
+                        >
+                            {{ store.errors.sku[0] }}
                         </p>
                     </div>
 
@@ -100,7 +92,7 @@ const submitForm = async () => {
                         </label>
                         <select
                             id="stock_location_id"
-                            v-model="formData.stock_location_id"
+                            v-model="store.item.stock_location_id"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                         >
                             <option value="">Select a location</option>
@@ -113,10 +105,10 @@ const submitForm = async () => {
                             </option>
                         </select>
                         <p
-                            v-if="errors.stock_location_id"
+                            v-if="store.errors.stock_location_id"
                             class="mt-1 text-sm text-red-600"
                         >
-                            {{ errors.stock_location_id[0] }}
+                            {{ store.errors.stock_location_id[0] }}
                         </p>
                     </div>
 
@@ -129,15 +121,15 @@ const submitForm = async () => {
                         </label>
                         <input
                             id="position"
-                            v-model="formData.position"
+                            v-model="store.item.position"
                             type="text"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                         />
                         <p
-                            v-if="errors.position"
+                            v-if="store.errors.position"
                             class="mt-1 text-sm text-red-600"
                         >
-                            {{ errors.position[0] }}
+                            {{ store.errors.position[0] }}
                         </p>
                     </div>
                 </div>
@@ -152,15 +144,15 @@ const submitForm = async () => {
                     </label>
                     <textarea
                         id="description"
-                        v-model="formData.description"
+                        v-model="store.item.description"
                         rows="3"
                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                     ></textarea>
                     <p
-                        v-if="errors.description"
+                        v-if="store.errors.description"
                         class="mt-1 text-sm text-red-600"
                     >
-                        {{ errors.description[0] }}
+                        {{ store.errors.description[0] }}
                     </p>
                 </div>
 
@@ -177,16 +169,16 @@ const submitForm = async () => {
                         </label>
                         <input
                             id="quantity"
-                            v-model="formData.quantity"
+                            v-model="store.item.quantity"
                             type="number"
                             min="0"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                         />
                         <p
-                            v-if="errors.quantity"
+                            v-if="store.errors.quantity"
                             class="mt-1 text-sm text-red-600"
                         >
-                            {{ errors.quantity[0] }}
+                            {{ store.errors.quantity[0] }}
                         </p>
                     </div>
 
@@ -199,16 +191,16 @@ const submitForm = async () => {
                         </label>
                         <input
                             id="reorder_point"
-                            v-model="formData.reorder_point"
+                            v-model="store.item.reorder_point"
                             type="number"
                             min="0"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                         />
                         <p
-                            v-if="errors.reorder_point"
+                            v-if="store.errors.reorder_point"
                             class="mt-1 text-sm text-red-600"
                         >
-                            {{ errors.reorder_point[0] }}
+                            {{ store.errors.reorder_point[0] }}
                         </p>
                     </div>
 
@@ -221,16 +213,16 @@ const submitForm = async () => {
                         </label>
                         <input
                             id="reorder_quantity"
-                            v-model="formData.reorder_quantity"
+                            v-model="store.item.reorder_quantity"
                             type="number"
                             min="0"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                         />
                         <p
-                            v-if="errors.reorder_quantity"
+                            v-if="store.errors.reorder_quantity"
                             class="mt-1 text-sm text-red-600"
                         >
-                            {{ errors.reorder_quantity[0] }}
+                            {{ store.errors.reorder_quantity[0] }}
                         </p>
                     </div>
 
@@ -243,17 +235,17 @@ const submitForm = async () => {
                         </label>
                         <input
                             id="unit_price"
-                            v-model="formData.unit_price"
+                            v-model="store.item.unit_price"
                             type="number"
                             min="0"
                             step="0.01"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                         />
                         <p
-                            v-if="errors.unit_price"
+                            v-if="store.errors.unit_price"
                             class="mt-1 text-sm text-red-600"
                         >
-                            {{ errors.unit_price[0] }}
+                            {{ store.errors.unit_price[0] }}
                         </p>
                     </div>
                 </div>
@@ -269,16 +261,16 @@ const submitForm = async () => {
                         </label>
                         <input
                             id="min_stock_level"
-                            v-model="formData.min_stock_level"
+                            v-model="store.item.min_stock_level"
                             type="number"
                             min="0"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                         />
                         <p
-                            v-if="errors.min_stock_level"
+                            v-if="store.errors.min_stock_level"
                             class="mt-1 text-sm text-red-600"
                         >
-                            {{ errors.min_stock_level[0] }}
+                            {{ store.errors.min_stock_level[0] }}
                         </p>
                     </div>
 
@@ -291,16 +283,16 @@ const submitForm = async () => {
                         </label>
                         <input
                             id="max_stock_level"
-                            v-model="formData.max_stock_level"
+                            v-model="store.item.max_stock_level"
                             type="number"
                             min="0"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                         />
                         <p
-                            v-if="errors.max_stock_level"
+                            v-if="store.errors.max_stock_level"
                             class="mt-1 text-sm text-red-600"
                         >
-                            {{ errors.max_stock_level[0] }}
+                            {{ store.errors.max_stock_level[0] }}
                         </p>
                     </div>
                 </div>
@@ -316,12 +308,15 @@ const submitForm = async () => {
                         </label>
                         <input
                             id="unit"
-                            v-model="formData.unit"
+                            v-model="store.item.unit"
                             type="text"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                         />
-                        <p v-if="errors.unit" class="mt-1 text-sm text-red-600">
-                            {{ errors.unit[0] }}
+                        <p
+                            v-if="store.errors.unit"
+                            class="mt-1 text-sm text-red-600"
+                        >
+                            {{ store.errors.unit[0] }}
                         </p>
                     </div>
 
@@ -334,15 +329,15 @@ const submitForm = async () => {
                         </label>
                         <input
                             id="expiration_date"
-                            v-model="formData.expiration_date"
+                            v-model="store.item.expiration_date"
                             type="date"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                         />
                         <p
-                            v-if="errors.expiration_date"
+                            v-if="store.errors.expiration_date"
                             class="mt-1 text-sm text-red-600"
                         >
-                            {{ errors.expiration_date[0] }}
+                            {{ store.errors.expiration_date[0] }}
                         </p>
                     </div>
                 </div>
