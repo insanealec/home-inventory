@@ -28,8 +28,8 @@ class UpdateItem
         ];
     }
 
-    public function asController(Request $request, InventoryItem $item)
+    public function asController(Request $request, InventoryItem $inventoryItem)
     {
-        return $this->handle($item, $request->all());
+        return $this->handle($inventoryItem, $request->all());
     }
 }

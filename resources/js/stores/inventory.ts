@@ -6,6 +6,7 @@ import { Pagination } from "../types/common";
 import CreateItem from "../actions/App/Actions/InventoryItem/CreateItem";
 import LoadItems from "../actions/App/Actions/InventoryItem/LoadItems";
 import LoadItem from "../actions/App/Actions/InventoryItem/LoadItem";
+import UpdateItem from "../actions/App/Actions/InventoryItem/UpdateItem";
 import DeleteItem from "../actions/App/Actions/InventoryItem/DeleteItem";
 
 export const useInventoryStore = defineStore("inventory", () => {
@@ -84,10 +85,9 @@ export const useInventoryStore = defineStore("inventory", () => {
         if (!item.value?.id) return false;
         try {
             updating.value = true;
-            const response = await axios.put(LoadItem.url(item.value.id), {
-                inventory_item: item.value,
-            });
-            return response.data;
+            const response = await axios.put(UpdateItem.url(item.value.id), item.value);
+            item.value = response.data;
+            return true;
         } catch (error) {
             console.error("Error updating inventory item:", error);
             return false;

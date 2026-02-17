@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import Content from "../../common/Content.vue";
 import Card from "../../common/Card.vue";
 import { useInventoryStore } from "../../../stores/inventory";
@@ -9,9 +9,10 @@ import ItemForm from "../../common/ItemForm.vue";
 const store = useInventoryStore();
 
 const router = useRouter();
+const route = useRoute();
 
-// Initialize form
-store.initItem();
+// Load item data for editing
+store.loadItem(parseInt(route.params.id as string));
 
 // Temp Stock locations for dropdown
 const stockLocations = ref([
@@ -23,9 +24,10 @@ const stockLocations = ref([
 
 // Handle form submission
 const submitForm = async () => {
-    if (!(await store.createItem())) return;
+    const success = await store.updateItem();
+    if (!success) return;
     // Redirect to inventory items list on success
-    router.push("/inventory");
+    router.push(`/inventory/${store?.item?.id}`);
 };
 </script>
 

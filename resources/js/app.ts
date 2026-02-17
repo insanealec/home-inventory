@@ -15,6 +15,7 @@ import Dashboard from "./components/pages/Dashboard.vue";
 import InventoryIndex from "./components/pages/inventory-items/Index.vue";
 import InventoryCreate from "./components/pages/inventory-items/Create.vue";
 import InventoryShow from "./components/pages/inventory-items/Show.vue";
+import InventoryUpdate from "./components/pages/inventory-items/Update.vue";
 
 // Create router
 const routes = [
@@ -25,6 +26,7 @@ const routes = [
     { path: "/inventory", component: InventoryIndex },
     { path: "/inventory/create", component: InventoryCreate },
     { path: "/inventory/:id", component: InventoryShow },
+    { path: "/inventory/:id/edit", component: InventoryUpdate },
 ];
 
 const router = createRouter({
