@@ -34,7 +34,7 @@ const submitForm = async () => {
 <template>
     <Content>
         <Card>
-            <template #title>Create New Inventory Item</template>
+            <template #title>Edit Inventory Item</template>
 
             <ItemForm @submit-form="submitForm" />
         </Card>

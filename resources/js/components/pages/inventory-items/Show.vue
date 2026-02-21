@@ -243,6 +243,12 @@ onMounted(() => {
                     >
                         Back
                     </button>
+                    <router-link
+                        :to="`/inventory/${store.item.id}/edit`"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                        Edit
+                    </router-link>
                     <button
                         type="button"
                         @click="deleteItem"
