@@ -55,3 +55,14 @@ export type StockLocation = {
     inventory_items?: InventoryItem[];
     user?: User;
 };
+export function createStockLocation(): StockLocation {
+    return {
+        id: 0,
+        name: "",
+        short_name: "",
+        description: "",
+        user_id: 0,
+        created_at: "",
+        updated_at: "",
+    };
+}

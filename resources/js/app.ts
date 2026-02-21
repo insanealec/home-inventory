@@ -16,6 +16,10 @@ import InventoryIndex from "./components/pages/inventory-items/Index.vue";
 import InventoryCreate from "./components/pages/inventory-items/Create.vue";
 import InventoryShow from "./components/pages/inventory-items/Show.vue";
 import InventoryUpdate from "./components/pages/inventory-items/Update.vue";
+import StockLocationIndex from "./components/pages/stock-locations/Index.vue";
+import StockLocationCreate from "./components/pages/stock-locations/Create.vue";
+import StockLocationShow from "./components/pages/stock-locations/Show.vue";
+import StockLocationUpdate from "./components/pages/stock-locations/Update.vue";
 
 // Create router
 const routes = [
@@ -27,6 +31,10 @@ const routes = [
     { path: "/inventory/create", component: InventoryCreate },
     { path: "/inventory/:id", component: InventoryShow },
     { path: "/inventory/:id/edit", component: InventoryUpdate },
+    { path: "/stock-locations", component: StockLocationIndex },
+    { path: "/stock-locations/create", component: StockLocationCreate },
+    { path: "/stock-locations/:id", component: StockLocationShow },
+    { path: "/stock-locations/:id/edit", component: StockLocationUpdate },
 ];
 
 const router = createRouter({
