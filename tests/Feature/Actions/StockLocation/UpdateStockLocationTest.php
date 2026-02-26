@@ -57,11 +57,11 @@ test('name is required and has max length', function () {
     expect($rules['name'])->toContain('max:255');
 });
 
-test('short name is required and has max length', function () {
+test('short name is nullable and has max length', function () {
     $action = app(UpdateStockLocation::class);
     $rules = $action->rules();
 
-    expect($rules['short_name'])->toContain('required');
+    expect($rules['short_name'])->toContain('nullable');
     expect($rules['short_name'])->toContain('max:50');
 });
 

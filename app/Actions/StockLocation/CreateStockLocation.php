@@ -19,7 +19,7 @@ class CreateStockLocation
     {
         return [
             'name' => 'required|string|max:255',
-            'short_name' => 'required|string|max:50',
+            'short_name' => 'nullable|string|max:50',
             'description' => 'nullable|string',
         ];
     }
