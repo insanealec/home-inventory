@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { useInventoryStore } from '../../stores/inventory';
+import { useStockLocationStore } from '../../stores/stock-location';
 import FormInput from './FormInput.vue';
 
 const store = useInventoryStore();
+const locationStore = useStockLocationStore();
+
+// Load stock locations for dropdown
+locationStore.loadStockLocations();
 </script>
 
 <template>
@@ -44,7 +49,7 @@ const store = useInventoryStore();
                 >
                     <option value="">Select a location</option>
                     <option
-                        v-for="location in stockLocations"
+                        v-for="location in locationStore.paginator.data"
                         :key="location.id"
                         :value="location.id"
                     >
