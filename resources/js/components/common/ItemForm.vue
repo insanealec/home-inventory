@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { useInventoryStore } from '../../stores/inventory';
-import { useStockLocationStore } from '../../stores/stock-location';
-import FormInput from './FormInput.vue';
+import { useInventoryStore } from "../../stores/inventory";
+import { useStockLocationStore } from "../../stores/stock-location";
+import FormInput from "./FormInput.vue";
+import StockLocationModal from "./StockLocationModal.vue";
 
 const store = useInventoryStore();
 const locationStore = useStockLocationStore();
@@ -11,7 +12,6 @@ locationStore.loadStockLocations();
 </script>
 
 <template>
-
     <form
         v-if="store.item"
         @submit.prevent="$emit('submit-form')"
@@ -42,20 +42,23 @@ locationStore.loadStockLocations();
                 >
                     Stock Location
                 </label>
-                <select
-                    id="stock_location_id"
-                    v-model="store.item.stock_location_id"
-                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
-                >
-                    <option value="">Select a location</option>
-                    <option
-                        v-for="location in locationStore.paginator.data"
-                        :key="location.id"
-                        :value="location.id"
+                <div class="flex items-center space-x-2">
+                    <select
+                        id="stock_location_id"
+                        v-model="store.item.stock_location_id"
+                        class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                     >
-                        {{ location.name }}
-                    </option>
-                </select>
+                        <option value="">Select a location</option>
+                        <option
+                            v-for="location in locationStore.paginator.data"
+                            :key="location.id"
+                            :value="location.id"
+                        >
+                            {{ location.name }}
+                        </option>
+                    </select>
+                    <StockLocationModal />
+                </div>
                 <p
                     v-if="store.errors.stock_location_id"
                     class="mt-1 text-sm text-red-600"
@@ -69,11 +72,7 @@ locationStore.loadStockLocations();
                 label="Position"
                 field="item.position"
                 :store="store"
-                :error="
-                    store.errors.position
-                        ? store.errors.position[0]
-                        : ''
-                "
+                :error="store.errors.position ? store.errors.position[0] : ''"
             />
         </div>
 
@@ -100,9 +99,7 @@ locationStore.loadStockLocations();
         </div>
 
         <!-- Quantity & Stock Levels -->
-        <div
-            class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
-        >
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <FormInput
                 id="quantity"
                 label="Quantity"
@@ -110,11 +107,7 @@ locationStore.loadStockLocations();
                 :store="store"
                 type="number"
                 :min="0"
-                :error="
-                    store.errors.quantity
-                        ? store.errors.quantity[0]
-                        : ''
-                "
+                :error="store.errors.quantity ? store.errors.quantity[0] : ''"
             />
 
             <FormInput
@@ -154,9 +147,7 @@ locationStore.loadStockLocations();
                 :min="0"
                 :step="0.01"
                 :error="
-                    store.errors.unit_price
-                        ? store.errors.unit_price[0]
-                        : ''
+                    store.errors.unit_price ? store.errors.unit_price[0] : ''
                 "
             />
         </div>
@@ -227,5 +218,4 @@ locationStore.loadStockLocations();
             </button>
         </div>
     </form>
-
 </template>
