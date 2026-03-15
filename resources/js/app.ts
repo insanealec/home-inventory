@@ -20,6 +20,10 @@ import StockLocationIndex from "./components/pages/stock-locations/Index.vue";
 import StockLocationCreate from "./components/pages/stock-locations/Create.vue";
 import StockLocationShow from "./components/pages/stock-locations/Show.vue";
 import StockLocationUpdate from "./components/pages/stock-locations/Update.vue";
+import ShoppingListIndex from "./components/pages/shopping-lists/Index.vue";
+import ShoppingListCreate from "./components/pages/shopping-lists/Create.vue";
+import ShoppingListShow from "./components/pages/shopping-lists/Show.vue";
+import ShoppingListUpdate from "./components/pages/shopping-lists/Update.vue";
 
 // Create router
 const routes = [
@@ -35,6 +39,10 @@ const routes = [
     { path: "/stock-locations/create", component: StockLocationCreate },
     { path: "/stock-locations/:id", component: StockLocationShow },
     { path: "/stock-locations/:id/edit", component: StockLocationUpdate },
+    { path: "/shopping-lists", component: ShoppingListIndex },
+    { path: "/shopping-lists/create", component: ShoppingListCreate },
+    { path: "/shopping-lists/:id", component: ShoppingListShow },
+    { path: "/shopping-lists/:id/edit", component: ShoppingListUpdate },
 ];
 
 const router = createRouter({

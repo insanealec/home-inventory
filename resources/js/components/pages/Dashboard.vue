@@ -1,18 +1,173 @@
 <script setup>
-import { onMounted } from "vue";
+import { ref, onMounted } from "vue";
+import axios from "axios";
 import { useTokenStore } from "@/stores/token";
 import Card from "../common/Card.vue";
 import Content from "../common/Content.vue";
 
 const tokenStore = useTokenStore();
+const summary = ref(null);
+const loading = ref(true);
 
-onMounted(() => {
+onMounted(async () => {
+    try {
+        const response = await axios.get("/api/dashboard");
+        summary.value = response.data;
+    } catch (error) {
+        console.error("Error loading dashboard:", error);
+    } finally {
+        loading.value = false;
+    }
     tokenStore.loadTokens();
 });
 </script>
 
 <template>
     <Content>
+        <!-- Summary Grid -->
+        <div v-if="summary && !loading" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <Card>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
+                        {{ summary.total_items }}
+                    </div>
+                    <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        Total Items
+                    </div>
+                </div>
+            </Card>
+
+            <Card>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                        {{ summary.total_locations }}
+                    </div>
+                    <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        Stock Locations
+                    </div>
+                </div>
+            </Card>
+
+            <Card>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-green-600 dark:text-green-400">
+                        {{ summary.active_shopping_lists }}
+                    </div>
+                    <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        Active Lists
+                    </div>
+                </div>
+            </Card>
+
+            <Card>
+                <div class="text-center">
+                    <div
+                        :class="[
+                            summary.low_stock_items.length > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400',
+                            'text-3xl font-bold',
+                        ]"
+                    >
+                        {{ summary.low_stock_items.length }}
+                    </div>
+                    <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        Low Stock
+                    </div>
+                </div>
+            </Card>
+        </div>
+
+        <!-- Quick Actions -->
+        <Card>
+            <template #title>Quick Actions</template>
+            <div class="flex flex-wrap gap-3">
+                <router-link
+                    to="/inventory/create"
+                    class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                >
+                    Add Item
+                </router-link>
+                <router-link
+                    to="/stock-locations/create"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                    Add Location
+                </router-link>
+                <router-link
+                    to="/shopping-lists/create"
+                    class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                >
+                    New Shopping List
+                </router-link>
+            </div>
+        </Card>
+
+        <!-- Low Stock Items -->
+        <Card v-if="summary && summary.low_stock_items.length > 0">
+            <template #title>Low Stock Items</template>
+            <div class="space-y-2">
+                <div
+                    v-for="item in summary.low_stock_items"
+                    :key="item.id"
+                    class="flex justify-between items-center p-2 bg-red-50 dark:bg-red-900/20 rounded"
+                >
+                    <router-link
+                        :to="`/inventory/${item.id}`"
+                        class="text-indigo-600 dark:text-indigo-400 hover:underline"
+                    >
+                        {{ item.name }}
+                    </router-link>
+                    <span class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ item.quantity }} / {{ item.reorder_point }}
+                    </span>
+                </div>
+            </div>
+        </Card>
+
+        <!-- Expiring Soon Items -->
+        <Card v-if="summary && summary.expiring_items.length > 0">
+            <template #title>Expiring Soon</template>
+            <div class="space-y-2">
+                <div
+                    v-for="item in summary.expiring_items"
+                    :key="item.id"
+                    class="flex justify-between items-center p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded"
+                >
+                    <router-link
+                        :to="`/inventory/${item.id}`"
+                        class="text-indigo-600 dark:text-indigo-400 hover:underline"
+                    >
+                        {{ item.name }}
+                    </router-link>
+                    <span class="text-sm text-gray-600 dark:text-gray-400">
+                        Expires: {{ item.expiration_date }}
+                    </span>
+                </div>
+            </div>
+        </Card>
+
+        <!-- Recent Items -->
+        <Card v-if="summary && summary.recent_items.length > 0">
+            <template #title>Recently Updated</template>
+            <div class="space-y-2">
+                <div
+                    v-for="item in summary.recent_items"
+                    :key="item.id"
+                    class="flex justify-between items-center p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded"
+                >
+                    <router-link
+                        :to="`/inventory/${item.id}`"
+                        class="text-indigo-600 dark:text-indigo-400 hover:underline"
+                    >
+                        {{ item.name }}
+                    </router-link>
+                    <span class="text-sm text-gray-600 dark:text-gray-400">
+                        Qty: {{ item.quantity }}
+                    </span>
+                </div>
+            </div>
+        </Card>
+
+        <!-- Token Management Card -->
         <Card>
             <template #title>Token Management</template>
             <!-- Create Token Form -->
