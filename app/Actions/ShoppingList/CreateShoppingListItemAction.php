@@ -2,6 +2,7 @@
 
 namespace App\Actions\ShoppingList;
 
+use App\Models\ShoppingList;
 use App\Models\ShoppingListItem;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -33,8 +34,8 @@ class CreateShoppingListItemAction
         ];
     }
 
-    public function asController(Request $request, int $shoppingListId): ShoppingListItem
+    public function asController(Request $request, ShoppingList $shoppingList): ShoppingListItem
     {
-        return $this->handle($request->user(), $shoppingListId, $request->all());
+        return $this->handle($request->user(), $shoppingList->id, $request->all());
     }
 }

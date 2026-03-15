@@ -2,6 +2,7 @@
 
 namespace App\Actions\ShoppingList;
 
+use App\Models\ShoppingList;
 use App\Models\ShoppingListItem;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -37,8 +38,10 @@ class UpdateShoppingListItemAction
         ];
     }
 
-    public function asController(Request $request)
+    public function asController(Request $request, ShoppingList $shoppingList, ShoppingListItem $shoppingListItem): ShoppingListItem
     {
-        return $this->handle($request->user(), $request->id, $request->all());
+        abort_unless($shoppingListItem->shopping_list_id === $shoppingList->id, 404);
+
+        return $this->handle($request->user(), $shoppingListItem->id, $request->all());
     }
 }

@@ -19,11 +19,11 @@ test('can get all shopping lists for authenticated user', function () {
     $response = $this->getJson('/api/shopping-lists');
 
     $response->assertSuccessful();
-    $response->assertJsonCount(3);
+    $response->assertJsonCount(3, 'data');
 });
 
 test('unauthenticated user cannot get shopping lists', function () {
-    $this->actingAs(null);
+    $this->app['auth']->forgetGuards();
     $response = $this->getJson('/api/shopping-lists');
 
     $response->assertUnauthorized();
@@ -73,7 +73,7 @@ test('create shopping list with optional fields', function () {
 // GET /api/shopping-lists/{id}
 test('can get a single shopping list with its items', function () {
     $list = ShoppingList::factory()
-        ->has(ShoppingListItem::factory()->count(2))
+        ->has(ShoppingListItem::factory()->count(2), 'items')
         ->create(['user_id' => $this->user->id]);
 
     $response = $this->getJson("/api/shopping-lists/{$list->id}");
@@ -89,7 +89,7 @@ test('user cannot get another user\'s shopping list', function () {
 
     $response = $this->getJson("/api/shopping-lists/{$list->id}");
 
-    $response->assertNotFound();
+    $response->assertForbidden();
 });
 
 // PUT /api/shopping-lists/{id}
@@ -117,7 +117,7 @@ test('user cannot update another user\'s shopping list', function () {
         'name' => 'Hacked',
     ]);
 
-    $response->assertNotFound();
+    $response->assertForbidden();
 });
 
 // DELETE /api/shopping-lists/{id}
@@ -136,13 +136,13 @@ test('user cannot delete another user\'s shopping list', function () {
 
     $response = $this->deleteJson("/api/shopping-lists/{$list->id}");
 
-    $response->assertNotFound();
+    $response->assertForbidden();
 });
 
 // GET /api/shopping-lists/{id}/items
 test('can get all items in a shopping list', function () {
     $list = ShoppingList::factory()
-        ->has(ShoppingListItem::factory()->count(3))
+        ->has(ShoppingListItem::factory()->count(3), 'items')
         ->create(['user_id' => $this->user->id]);
 
     $response = $this->getJson("/api/shopping-lists/{$list->id}/items");
@@ -154,12 +154,12 @@ test('can get all items in a shopping list', function () {
 test('user cannot get items from another user\'s shopping list', function () {
     $otherUser = User::factory()->create();
     $list = ShoppingList::factory()
-        ->has(ShoppingListItem::factory()->count(2))
+        ->has(ShoppingListItem::factory()->count(2), 'items')
         ->create(['user_id' => $otherUser->id]);
 
     $response = $this->getJson("/api/shopping-lists/{$list->id}/items");
 
-    $response->assertNotFound();
+    $response->assertForbidden();
 });
 
 // POST /api/shopping-lists/{id}/items
@@ -266,7 +266,7 @@ test('user cannot get an item from another user\'s list', function () {
 
     $response = $this->getJson("/api/shopping-lists/{$list->id}/items/{$item->id}");
 
-    $response->assertNotFound();
+    $response->assertForbidden();
 });
 
 // PUT /api/shopping-lists/{id}/items/{itemId}

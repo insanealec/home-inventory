@@ -2,6 +2,7 @@
 
 namespace App\Actions\ShoppingList;
 
+use App\Models\ShoppingList;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -22,8 +23,8 @@ class GetShoppingListItemsAction
             ->get();
     }
 
-    public function asController(Request $request, int $shoppingListId): Collection
+    public function asController(Request $request, ShoppingList $shoppingList): Collection
     {
-        return $this->handle($request->user(), $shoppingListId);
+        return $this->handle($request->user(), $shoppingList->id);
     }
 }

@@ -24,7 +24,7 @@ class UserOwnsResource
         }
 
         foreach ($request->route()->parameters() as $parameter) {
-            if ($parameter instanceof Model && property_exists($parameter, 'user_id')) {
+            if ($parameter instanceof Model && isset($parameter->user_id)) {
                 if ($parameter->user_id !== $user->id) {
                     throw new AuthorizationException;
                 }

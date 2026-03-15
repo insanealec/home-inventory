@@ -18,8 +18,8 @@ class DeleteShoppingListAction
         return true;
     }
 
-    public function asController(Request $request)
+    public function asController(Request $request, ShoppingList $shoppingList): bool
     {
-        return $this->handle($request->user(), $request->id);
+        return $this->handle($request->user(), $shoppingList->id);
     }
 }

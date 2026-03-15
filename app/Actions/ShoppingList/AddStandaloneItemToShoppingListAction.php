@@ -2,6 +2,7 @@
 
 namespace App\Actions\ShoppingList;
 
+use App\Models\ShoppingList;
 use App\Models\ShoppingListItem;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -36,8 +37,8 @@ class AddStandaloneItemToShoppingListAction
         ];
     }
 
-    public function asController(Request $request)
+    public function asController(Request $request, ShoppingList $shoppingList): ShoppingListItem
     {
-        return $this->handle($request->user(), $request->shopping_list_id, $request->all());
+        return $this->handle($request->user(), $shoppingList->id, $request->all());
     }
 }

@@ -18,8 +18,8 @@ class GetShoppingListAction
             ->findOrFail($id);
     }
 
-    public function asController(Request $request, int $id): ShoppingList
+    public function asController(Request $request, ShoppingList $shoppingList): ShoppingList
     {
-        return $this->handle($request->user(), $id);
+        return $this->handle($request->user(), $shoppingList->id);
     }
 }

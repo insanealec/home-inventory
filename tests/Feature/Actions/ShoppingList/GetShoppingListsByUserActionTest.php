@@ -3,26 +3,27 @@
 use App\Actions\ShoppingList\GetShoppingListsByUserAction;
 use App\Models\ShoppingList;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
-test('returns all shopping lists for a user', function () {
+test('returns paginated shopping lists for a user', function () {
     $user = User::factory()->create();
     ShoppingList::factory()->create(['user_id' => $user->id, 'name' => 'List A']);
     ShoppingList::factory()->create(['user_id' => $user->id, 'name' => 'List B']);
 
     $result = app(GetShoppingListsByUserAction::class)->handle($user);
 
-    expect($result)->toBeInstanceOf(Collection::class)
-        ->and($result)->toHaveCount(2);
+    expect($result)->toBeInstanceOf(LengthAwarePaginator::class)
+        ->and($result->total())->toBe(2);
 });
 
-test('returns empty collection when user has no lists', function () {
+test('returns empty paginator when user has no lists', function () {
     $user = User::factory()->create();
 
     $result = app(GetShoppingListsByUserAction::class)->handle($user);
 
-    expect($result)->toBeInstanceOf(Collection::class)
-        ->and($result)->toBeEmpty();
+    expect($result)->toBeInstanceOf(LengthAwarePaginator::class)
+        ->and($result->total())->toBe(0)
+        ->and($result->items())->toBeEmpty();
 });
 
 test('does not return other users lists', function () {
@@ -32,7 +33,7 @@ test('does not return other users lists', function () {
 
     $result = app(GetShoppingListsByUserAction::class)->handle($user);
 
-    expect($result)->toBeEmpty();
+    expect($result->total())->toBe(0);
 });
 
 test('orders lists by most recent first', function () {
@@ -42,8 +43,8 @@ test('orders lists by most recent first', function () {
 
     $result = app(GetShoppingListsByUserAction::class)->handle($user);
 
-    expect($result->first()->id)->toBe($newer->id)
-        ->and($result->last()->id)->toBe($older->id);
+    expect($result->items()[0]->id)->toBe($newer->id)
+        ->and($result->items()[1]->id)->toBe($older->id);
 });
 
 test('includes items count on each list', function () {
@@ -54,5 +55,5 @@ test('includes items count on each list', function () {
 
     $result = app(GetShoppingListsByUserAction::class)->handle($user);
 
-    expect($result->first()->items_count)->toBe(2);
+    expect($result->items()[0]->items_count)->toBe(2);
 });

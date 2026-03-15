@@ -2,6 +2,7 @@
 
 namespace App\Actions\ShoppingList;
 
+use App\Models\ShoppingList;
 use App\Models\ShoppingListItem;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -39,8 +40,8 @@ class UpdateShoppingListItemsBulkAction
         return compact('updated', 'errors');
     }
 
-    public function asController(Request $request, int $shoppingListId): array
+    public function asController(Request $request, ShoppingList $shoppingList): array
     {
-        return $this->handle($request->user(), $shoppingListId, $request->input('updates', []));
+        return $this->handle($request->user(), $shoppingList->id, $request->input('updates', []));
     }
 }

@@ -31,10 +31,10 @@ class GetDashboardSummaryAction
             ->limit(5)
             ->get(['id', 'name', 'quantity', 'reorder_point']);
 
-        // Items where expiration_date is within 30 days (up to 5)
+        // Items expired or expiring within 30 days (up to 5)
         $expiringItems = $user->inventoryItems()
             ->whereNotNull('expiration_date')
-            ->whereBetween('expiration_date', [now()->startOfDay(), now()->addDays(30)->endOfDay()])
+            ->where('expiration_date', '<=', now()->addDays(30)->endOfDay())
             ->orderBy('expiration_date')
             ->limit(5)
             ->get(['id', 'name', 'expiration_date', 'quantity']);

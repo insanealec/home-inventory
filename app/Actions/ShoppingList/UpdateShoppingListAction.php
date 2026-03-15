@@ -28,8 +28,8 @@ class UpdateShoppingListAction
         ];
     }
 
-    public function asController(Request $request)
+    public function asController(Request $request, ShoppingList $shoppingList): ShoppingList
     {
-        return $this->handle($request->user(), $request->id, $request->all());
+        return $this->handle($request->user(), $shoppingList->id, $request->all());
     }
 }

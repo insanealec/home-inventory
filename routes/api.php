@@ -61,23 +61,23 @@ Route::delete('/stock-locations/{stockLocation}', DeleteStockLocation::class)->m
 // Shopping List Routes
 Route::get('/shopping-lists', GetShoppingListsByUserAction::class)->middleware('auth:sanctum');
 Route::post('/shopping-lists', CreateShoppingListAction::class)->middleware('auth:sanctum');
-Route::get('/shopping-lists/{id}', GetShoppingListAction::class)->middleware('auth:sanctum');
-Route::put('/shopping-lists/{id}', UpdateShoppingListAction::class)->middleware('auth:sanctum');
-Route::delete('/shopping-lists/{id}', DeleteShoppingListAction::class)->middleware('auth:sanctum');
+Route::get('/shopping-lists/{shoppingList}', GetShoppingListAction::class)->middleware(['auth:sanctum', UserOwnsResource::class]);
+Route::put('/shopping-lists/{shoppingList}', UpdateShoppingListAction::class)->middleware(['auth:sanctum', UserOwnsResource::class]);
+Route::delete('/shopping-lists/{shoppingList}', DeleteShoppingListAction::class)->middleware(['auth:sanctum', UserOwnsResource::class]);
 
 // Shopping List Items Routes
-Route::get('/shopping-lists/{id}/items', GetShoppingListItemsAction::class)->middleware('auth:sanctum');
-Route::post('/shopping-lists/{id}/items', CreateShoppingListItemAction::class)->middleware('auth:sanctum');
-Route::post('/shopping-lists/{id}/items/bulk', AddMultipleItemsToShoppingListAction::class)->middleware('auth:sanctum');
-Route::put('/shopping-lists/{id}/items/bulk', UpdateShoppingListItemsBulkAction::class)->middleware('auth:sanctum');
-Route::get('/shopping-lists/{id}/items/{itemId}', GetShoppingListItemAction::class)->middleware('auth:sanctum');
-Route::put('/shopping-lists/{id}/items/{itemId}', UpdateShoppingListItemAction::class)->middleware('auth:sanctum');
-Route::delete('/shopping-lists/{id}/items/{itemId}', DeleteShoppingListItemAction::class)->middleware('auth:sanctum');
-Route::post('/shopping-lists/{id}/items/from-inventory', AddInventoryItemToShoppingListAction::class)->middleware('auth:sanctum');
-Route::post('/shopping-lists/{id}/items/standalone', AddStandaloneItemToShoppingListAction::class)->middleware('auth:sanctum');
+Route::get('/shopping-lists/{shoppingList}/items', GetShoppingListItemsAction::class)->middleware(['auth:sanctum', UserOwnsResource::class]);
+Route::post('/shopping-lists/{shoppingList}/items', CreateShoppingListItemAction::class)->middleware(['auth:sanctum', UserOwnsResource::class]);
+Route::post('/shopping-lists/{shoppingList}/items/bulk', AddMultipleItemsToShoppingListAction::class)->middleware(['auth:sanctum', UserOwnsResource::class]);
+Route::put('/shopping-lists/{shoppingList}/items/bulk', UpdateShoppingListItemsBulkAction::class)->middleware(['auth:sanctum', UserOwnsResource::class]);
+Route::get('/shopping-lists/{shoppingList}/items/{shoppingListItem}', GetShoppingListItemAction::class)->middleware(['auth:sanctum', UserOwnsResource::class]);
+Route::put('/shopping-lists/{shoppingList}/items/{shoppingListItem}', UpdateShoppingListItemAction::class)->middleware(['auth:sanctum', UserOwnsResource::class]);
+Route::delete('/shopping-lists/{shoppingList}/items/{shoppingListItem}', DeleteShoppingListItemAction::class)->middleware(['auth:sanctum', UserOwnsResource::class]);
+Route::post('/shopping-lists/{shoppingList}/items/from-inventory', AddInventoryItemToShoppingListAction::class)->middleware(['auth:sanctum', UserOwnsResource::class]);
+Route::post('/shopping-lists/{shoppingList}/items/standalone', AddStandaloneItemToShoppingListAction::class)->middleware(['auth:sanctum', UserOwnsResource::class]);
 
 // Shopping Category Routes
 Route::get('/shopping-categories', GetShoppingCategoriesAction::class)->middleware('auth:sanctum');
 Route::post('/shopping-categories', CreateShoppingCategoryAction::class)->middleware('auth:sanctum');
-Route::put('/shopping-categories/{id}', UpdateShoppingCategoryAction::class)->middleware('auth:sanctum');
-Route::delete('/shopping-categories/{id}', DeleteShoppingCategoryAction::class)->middleware('auth:sanctum');
+Route::put('/shopping-categories/{shoppingCategory}', UpdateShoppingCategoryAction::class)->middleware(['auth:sanctum', UserOwnsResource::class]);
+Route::delete('/shopping-categories/{shoppingCategory}', DeleteShoppingCategoryAction::class)->middleware(['auth:sanctum', UserOwnsResource::class]);

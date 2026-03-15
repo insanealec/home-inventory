@@ -2,9 +2,11 @@
 
 namespace App\Actions\ShoppingList;
 
+use App\Models\ShoppingList;
 use App\Models\ShoppingListItem;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class AddInventoryItemToShoppingListAction
@@ -31,19 +33,21 @@ class AddInventoryItemToShoppingListAction
     public function rules(): array
     {
         return [
-            'shopping_list_id' => 'required|exists:shopping_lists,id',
-            'inventory_item_id' => 'required|exists:inventory_items,id',
+            'inventory_item_id' => [
+                'required',
+                Rule::exists('inventory_items', 'id')->where('user_id', auth()->id()),
+            ],
             'quantity' => 'required|integer|min:1',
         ];
     }
 
-    public function asController(Request $request)
+    public function asController(Request $request, ShoppingList $shoppingList): ShoppingListItem
     {
         return $this->handle(
-            $request->user(), 
-            $request->shopping_list_id, 
-            $request->inventory_item_id, 
-            $request->quantity
+            $request->user(),
+            $shoppingList->id,
+            $request->integer('inventory_item_id'),
+            $request->integer('quantity'),
         );
     }
 }

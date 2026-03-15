@@ -2,6 +2,7 @@
 
 namespace App\Actions\ShoppingList;
 
+use App\Models\ShoppingList;
 use App\Models\ShoppingListItem;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -22,8 +23,10 @@ class DeleteShoppingListItemAction
         return true;
     }
 
-    public function asController(Request $request)
+    public function asController(Request $request, ShoppingList $shoppingList, ShoppingListItem $shoppingListItem): bool
     {
-        return $this->handle($request->user(), $request->id);
+        abort_unless($shoppingListItem->shopping_list_id === $shoppingList->id, 404);
+
+        return $this->handle($request->user(), $shoppingListItem->id);
     }
 }

@@ -28,8 +28,8 @@ class UpdateShoppingCategoryAction
         ];
     }
 
-    public function asController(Request $request, int $id): ShoppingCategory
+    public function asController(Request $request, ShoppingCategory $shoppingCategory): ShoppingCategory
     {
-        return $this->handle($request->user(), $id, $request->all());
+        return $this->handle($request->user(), $shoppingCategory->id, $request->all());
     }
 }

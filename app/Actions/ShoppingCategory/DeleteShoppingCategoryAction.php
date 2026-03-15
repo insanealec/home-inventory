@@ -2,6 +2,7 @@
 
 namespace App\Actions\ShoppingCategory;
 
+use App\Models\ShoppingCategory;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -17,8 +18,8 @@ class DeleteShoppingCategoryAction
         return true;
     }
 
-    public function asController(Request $request, int $id): bool
+    public function asController(Request $request, ShoppingCategory $shoppingCategory): bool
     {
-        return $this->handle($request->user(), $id);
+        return $this->handle($request->user(), $shoppingCategory->id);
     }
 }

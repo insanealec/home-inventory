@@ -20,7 +20,7 @@ test('can get all shopping categories', function () {
 });
 
 test('unauthenticated user cannot get shopping categories', function () {
-    $this->actingAs(null);
+    $this->app['auth']->forgetGuards();
     $response = $this->getJson('/api/shopping-categories');
 
     $response->assertUnauthorized();
@@ -89,7 +89,7 @@ test('user cannot update another user\'s shopping category', function () {
         'name' => 'Hacked',
     ]);
 
-    $response->assertNotFound();
+    $response->assertForbidden();
 });
 
 test('can update partial fields of shopping category', function () {
@@ -127,5 +127,5 @@ test('user cannot delete another user\'s shopping category', function () {
 
     $response = $this->deleteJson("/api/shopping-categories/{$category->id}");
 
-    $response->assertNotFound();
+    $response->assertForbidden();
 });
