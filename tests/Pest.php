@@ -45,3 +45,11 @@ function something()
 {
     // ..
 }
+
+/**
+ * Decode a Response returned by an MCP resource or tool back into an array for easy assertions.
+ */
+function decodeResponse(\Laravel\Mcp\Response $response): array
+{
+    return json_decode((string) $response->content(), true);
+}
