@@ -24,6 +24,7 @@ import ShoppingListIndex from "./components/pages/shopping-lists/Index.vue";
 import ShoppingListCreate from "./components/pages/shopping-lists/Create.vue";
 import ShoppingListShow from "./components/pages/shopping-lists/Show.vue";
 import ShoppingListUpdate from "./components/pages/shopping-lists/Update.vue";
+import NotificationPreferences from "./components/pages/settings/NotificationPreferences.vue";
 
 // Create router
 const routes = [
@@ -43,6 +44,7 @@ const routes = [
     { path: "/shopping-lists/create", component: ShoppingListCreate },
     { path: "/shopping-lists/:id", component: ShoppingListShow },
     { path: "/shopping-lists/:id/edit", component: ShoppingListUpdate },
+    { path: "/settings/notifications", component: NotificationPreferences },
 ];
 
 const router = createRouter({

@@ -1,6 +1,11 @@
 <?php
 
 use App\Actions\Dashboard\GetDashboardSummaryAction;
+use App\Actions\Notification\DismissNotificationAction;
+use App\Actions\Notification\GetNotificationPreferencesAction;
+use App\Actions\Notification\GetNotificationsAction;
+use App\Actions\Notification\MarkNotificationReadAction;
+use App\Actions\Notification\UpdateNotificationPreferencesAction;
 use App\Actions\InventoryItem\CreateItem;
 use App\Actions\InventoryItem\DeleteItem;
 use App\Actions\InventoryItem\LoadItem;
@@ -81,3 +86,12 @@ Route::get('/shopping-categories', GetShoppingCategoriesAction::class)->middlewa
 Route::post('/shopping-categories', CreateShoppingCategoryAction::class)->middleware('auth:sanctum');
 Route::put('/shopping-categories/{shoppingCategory}', UpdateShoppingCategoryAction::class)->middleware(['auth:sanctum', UserOwnsResource::class]);
 Route::delete('/shopping-categories/{shoppingCategory}', DeleteShoppingCategoryAction::class)->middleware(['auth:sanctum', UserOwnsResource::class]);
+
+// Notification Preference Routes
+Route::get('/user/notification-preferences', GetNotificationPreferencesAction::class)->middleware('auth:sanctum');
+Route::put('/user/notification-preferences', UpdateNotificationPreferencesAction::class)->middleware('auth:sanctum');
+
+// Notification Centre Routes
+Route::get('/notifications', GetNotificationsAction::class)->middleware('auth:sanctum');
+Route::put('/notifications/{notificationId}', MarkNotificationReadAction::class)->middleware('auth:sanctum');
+Route::delete('/notifications/{notificationId}', DismissNotificationAction::class)->middleware('auth:sanctum');

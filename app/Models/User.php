@@ -23,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'notification_preferences',
     ];
 
     /**
@@ -45,7 +46,30 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'notification_preferences' => 'array',
         ];
+    }
+
+    /**
+     * Known notification types. Unset keys default to true (opted in).
+     *
+     * @var array<string, bool>
+     */
+    public const NOTIFICATION_TYPES = [
+        'low_stock' => true,
+        'expiring_items' => true,
+    ];
+
+    /**
+     * Return notification preferences with defaults applied for any missing keys.
+     *
+     * @return array<string, bool>
+     */
+    public function notificationPreferencesWithDefaults(): array
+    {
+        $stored = $this->notification_preferences ?? [];
+
+        return array_merge(self::NOTIFICATION_TYPES, $stored);
     }
 
     /**
