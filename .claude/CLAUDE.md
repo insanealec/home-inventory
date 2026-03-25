@@ -7,7 +7,7 @@ A home-inventory service helping people track items across locations in their ho
 - **PHP** 8.5.1 / **Laravel** 12
 - **Authentication**: Fortify 1 + Sanctum 4
 - **Testing**: Pest 4
-- **Frontend**: Vue 3 + TailwindCSS 4
+- **Frontend**: Angular (standalone + Signals) + TailwindCSS 4 *(migrating from Vue 3)*
 
 ## Key Skills
 Import these files when working on the relevant domain:
@@ -15,6 +15,7 @@ Import these files when working on the relevant domain:
 - @.claude/skills/pest-testing.md — Writing and running Pest 4 tests
 - @.claude/skills/developing-with-fortify.md — Laravel Fortify auth backend
 - @.claude/skills/tailwindcss-development.md — Tailwind CSS v4 utilities
+- @.claude/skills/angular-migration/SKILL.md — Angular frontend conventions, component patterns, services, routing
 
 ## Laravel Conventions
 
