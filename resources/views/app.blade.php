@@ -56,7 +56,7 @@
 
         @vite(['resources/js/app.ts'])
     </head>
-    <body class="font-sans antialiased" id="body">
-        {{--  --}}
+    <body class="font-sans antialiased">
+        <app-root></app-root>
     </body>
 </html>

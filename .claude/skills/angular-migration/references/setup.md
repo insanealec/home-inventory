@@ -68,6 +68,8 @@ Angular requires specific TypeScript options. Update or create `tsconfig.json`:
 Replace the Vue `createApp` bootstrap with Angular's:
 
 ```typescript
+import 'zone.js'
+import '@angular/compiler'  // required for @analogjs/vite-plugin-angular in dev mode
 import './bootstrap'
 import '../css/app.css'
 import { bootstrapApplication } from '@angular/platform-browser'
