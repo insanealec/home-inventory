@@ -10,13 +10,14 @@ Ideal situation is using the API/website to add items to locations in their home
 - **Fortify**: 1 (FORTIFY)
 - **Sanctum**: 4 (SANCTUM)
 - **Pest**: 4 (PEST)
-- **Vue**: 3 (VUE)
+- **Angular**: 19 (standalone + Signals)
 - **TailwindCSS**: 4 (TAILWINDCSS)
 
 ## Essential Skills
 - `pest-testing` — Tests applications using Pest 4 framework
 - `tailwindcss-development` — Styles using Tailwind CSS v4 utilities
 - `developing-with-fortify` — Laravel Fortify authentication backend
+- `angular-migration` — Angular 19 standalone component conventions, services, routing
 
 ## Key Rules
 

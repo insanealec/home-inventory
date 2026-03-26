@@ -44,17 +44,17 @@ The `ShoppingCategory` model and migration exist but there are no actions or rou
 
 ### 1.3 Shopping List Frontend
 
-No Vue pages or Pinia store exist for shopping lists despite full backend support.
+Frontend Angular components and services for shopping lists (migrated from Vue/Pinia).
 
-- [x] Create `stores/shopping-list.ts` Pinia store with full CRUD
-- [x] Create `stores/shopping-category.ts` Pinia store
-- [x] Create `shopping-lists/Index.vue` — paginated list of shopping lists
-- [x] Create `shopping-lists/Create.vue` — new list form
-- [x] Create `shopping-lists/Show.vue` — list detail with item check-off
-- [x] Create `shopping-lists/Update.vue` — edit list metadata
-- [x] Create `ShoppingListItemList.vue` component with check-off UX, drag-to-reorder, and inline item editing
-- [x] Add Vue router entries for all shopping list pages
-- [x] Add shopping lists navigation link in `NavMain.vue`
+- [x] Create `services/shopping-list.service.ts` Angular service with full CRUD
+- [x] Create `services/shopping-category.service.ts` Angular service
+- [x] Create `pages/shopping-lists/index.component.ts` — paginated list of shopping lists
+- [x] Create `pages/shopping-lists/create.component.ts` — new list form
+- [x] Create `pages/shopping-lists/show.component.ts` — list detail with item check-off
+- [x] Create `pages/shopping-lists/update.component.ts` — edit list metadata
+- [x] Create `components/shopping-list-item-list.component.ts` with check-off UX, drag-to-reorder, and inline item editing
+- [x] Add Angular router entries for all shopping list pages
+- [x] Add shopping lists navigation link in `nav/nav-main.component.ts`
 
 ### 1.4 Dashboard / Home Screen
 
@@ -81,8 +81,8 @@ Allow users to attach one or more photos to an inventory item — particularly u
 - [ ] Create `DeleteInventoryItemPhotoAction` — on intentional deletion, also null out `photo_embedding` if set (see 13.4)
 - [ ] Register `POST /api/inventory-items/{id}/photos` and `DELETE /api/inventory-items/{id}/photos/{photoId}`
 - [ ] Update `LoadItem` / API resource to include photo URLs — use a helper that falls back to a placeholder asset when `getFirstMediaUrl('photos')` returns empty (file missing from disk but DB record still present), e.g. `$item->getFirstMediaUrl('photos') ?: asset('images/no-photo.svg')`
-- [ ] Add image upload input to `Create.vue` and `Update.vue`
-- [ ] Add thumbnail gallery to `Show.vue` — render the placeholder image when a photo URL is the fallback asset
+- [ ] Add image upload input to `create.component.ts` and `update.component.ts`
+- [ ] Add thumbnail gallery to `show.component.ts` — render the placeholder image when a photo URL is the fallback asset
 - [ ] Write tests for photo upload and deletion actions
 
 ### 2.2 Barcode & QR Code Support
@@ -93,7 +93,7 @@ Allow scanning or entering a barcode to quickly look up or create an item.
 - [ ] Add `barcode` to `InventoryItem` fillable and validation rules
 - [ ] Create `LookupItemByBarcodeAction` — returns existing item or queries Open Food Facts / UPC Item DB
 - [ ] Register `GET /api/inventory-items/barcode/{code}` route
-- [ ] Integrate `html5-qrcode` or `@zxing/browser` in the Vue frontend for camera-based scanning
+- [ ] Integrate `html5-qrcode` or `@zxing/browser` in the Angular frontend for camera-based scanning
 - [ ] Wire barcode scanner into the Create Item form to auto-fill name, description, and unit
 - [ ] Write tests for barcode lookup (found / not found / external API fallback)
 
@@ -127,7 +127,7 @@ Track when an item was purchased, at what price, and from where — useful for w
 - [ ] Add `hasMany → ItemPurchase` relationship to `InventoryItem`
 - [ ] Create `RecordItemPurchaseAction`, `UpdateItemPurchaseAction`, `DeleteItemPurchaseAction`
 - [ ] Register API endpoints for purchase history
-- [ ] Add purchase history list and form to `Show.vue`
+- [ ] Add purchase history list and form to `show.component.ts`
 - [ ] Write tests for all purchase history actions
 
 ---
@@ -160,7 +160,7 @@ A dedicated endpoint and page showing all items in a given location — useful f
 
 - [ ] Add `GET /api/stock-locations/{id}/inventory-items` route returning paginated items with full detail
 - [ ] Create corresponding action or extend `LoadItems` to support this endpoint
-- [ ] Add an "Items in this location" tab or section to `StockLocations/Show.vue`
+- [ ] Add an "Items in this location" tab or section to `pages/stock-locations/show.component.ts`
 - [ ] Write tests for the new endpoint
 
 ---
@@ -193,7 +193,7 @@ The `InventoryItem` model already has `reorder_point`, `min_stock_level`, `max_s
 - [x] Create a `GET /api/notifications` endpoint returning unread + recent notifications
 - [x] Create `PUT /api/notifications/{id}` to mark as read
 - [x] Create `DELETE /api/notifications/{id}` to dismiss
-- [x] Add notification bell icon to `NavMain.vue` with unread count badge and dropdown
+- [x] Add notification bell icon to `nav/nav-main.component.ts` with unread count badge and dropdown
 - [x] Build notification drawer/dropdown listing alerts with mark-read, dismiss, and link to settings
 - [x] Write tests for notification read/dismiss endpoints
 
@@ -215,8 +215,8 @@ Unset keys default to `true` (opted in) so existing users receive notifications 
 - [x] Create `GetNotificationPreferencesAction` — returns prefs with defaults applied for missing keys
 - [x] Register `GET /api/user/notification-preferences` route
 - [x] Register `PUT /api/user/notification-preferences` route
-- [x] Build `NotificationPreferences.vue` settings page with labelled toggles and descriptions
-- [x] Register `/settings/notifications` route in Vue Router
+- [x] Build `pages/settings/notification-preferences.component.ts` with labelled toggles and descriptions
+- [x] Register `/settings/notifications` route in Angular Router
 - [ ] Add a subtle discoverability nudge on the inventory item create/edit forms (e.g. "Low stock alerts are on — manage in notification preferences") linking to the preferences page
 - [x] `CheckLowStockAction` skips users where `low_stock` preference is `false`
 - [x] `CheckExpiringItemsAction` skips users where `expiring_items` preference is `false`
@@ -362,7 +362,7 @@ Auto-sort shopping list items by their category's `store_section` so users can s
 
 - [ ] Install `vite-plugin-pwa`
 - [ ] Configure manifest (name, icons, theme colour, start URL)
-- [ ] Configure service worker with cache-first strategy for Vue shell
+- [ ] Configure service worker with cache-first strategy for Angular shell
 - [ ] Configure background sync for offline write operations
 - [ ] Test install prompt on iOS and Android
 
@@ -436,12 +436,12 @@ Currently actions return Eloquent models directly. API Resources decouple the re
 - [ ] Create `ShoppingCategoryResource`
 - [ ] Update all action `asController()` methods and routes to wrap responses in Resources
 - [ ] Ensure camelCase field names are consistent across all resources
-- [ ] Update frontend Pinia stores to use the new response shapes
+- [ ] Update Angular services to use the new response shapes
 
 ### 12.2 API Versioning
 
 - [ ] Prefix all routes in `routes/api.php` with `/v1/`
-- [ ] Update Vue Pinia stores and API base URL config accordingly
+- [ ] Update Angular services and API base URL config accordingly
 - [ ] Document the versioning strategy in the project README
 
 ### 12.3 Rate Limiting
@@ -665,7 +665,7 @@ This hooks into section 2.1's `AddInventoryItemPhotoAction`. After storing the p
 
 ### 13.6 Frontend — Visual Search UI
 
-- [ ] Add a "Visual Search" tab or toggle to the inventory index page (`inventory/Index.vue`)
+- [ ] Add a "Visual Search" tab or toggle to `pages/inventory-items/index.component.ts`
 - [ ] In visual search mode, show a camera/upload input instead of the text search box
 - [ ] On submit, `POST` to `/api/inventory-items/search/visual` with either the file or the text query
 - [ ] Display results as a visual grid (photo thumbnails + name + location) rather than the standard table
@@ -685,7 +685,7 @@ Once the system is live, existing items with photos won't have embeddings yet.
 
 ## 14. MCP Server — AI Agent Interface
 
-The primary goal of this project is to expose the home inventory system to AI agents via the [Model Context Protocol](https://laravel.com/docs/12.x/mcp). The official `laravel/mcp` package makes this straightforward: tools are callable actions; resources are readable data by URI. Authentication is handled by Sanctum — the same tokens the Vue frontend uses.
+The primary goal of this project is to expose the home inventory system to AI agents via the [Model Context Protocol](https://laravel.com/docs/12.x/mcp). The official `laravel/mcp` package makes this straightforward: tools are callable actions; resources are readable data by URI. Authentication is handled by Sanctum — the same tokens the Angular frontend uses.
 
 > **Depends on:** Section 1 (all routes wired and working — done). Section 12.1 (API Resources) is desirable but not a hard blocker; tools can return Eloquent models directly and be updated later to use Resources.
 
