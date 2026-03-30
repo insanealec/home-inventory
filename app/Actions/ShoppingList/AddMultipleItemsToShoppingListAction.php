@@ -7,6 +7,7 @@ use App\Models\ShoppingListItem;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class AddMultipleItemsToShoppingListAction
@@ -33,7 +34,7 @@ class AddMultipleItemsToShoppingListAction
                 'unit' => 'nullable|string|max:50',
                 'notes' => 'nullable|string',
                 'estimated_price' => 'nullable|numeric|min:0',
-                'category_id' => 'nullable|exists:shopping_categories,id',
+                'category_id' => ['nullable', Rule::exists('shopping_categories', 'id')->where('user_id', $user->id)],
                 'priority' => 'nullable|integer|min:0|max:10',
                 'sort_order' => 'nullable|integer',
                 'inventory_item_id' => 'nullable|exists:inventory_items,id',

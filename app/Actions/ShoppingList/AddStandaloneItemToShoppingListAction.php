@@ -6,6 +6,7 @@ use App\Models\ShoppingList;
 use App\Models\ShoppingListItem;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class AddStandaloneItemToShoppingListAction
@@ -29,7 +30,7 @@ class AddStandaloneItemToShoppingListAction
             'name' => 'required|string|max:255',
             'quantity' => 'required|integer|min:1',
             'unit' => 'nullable|string|max:50',
-            'category_id' => 'nullable|exists:shopping_categories,id',
+            'category_id' => ['nullable', Rule::exists('shopping_categories', 'id')->where('user_id', auth()->id())],
             'notes' => 'nullable|string',
             'estimated_price' => 'nullable|numeric|min:0',
             'priority' => 'nullable|integer|min:0',

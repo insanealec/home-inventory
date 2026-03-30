@@ -298,6 +298,68 @@ test('can delete a shopping list item', function () {
     $this->assertDatabaseMissing('shopping_list_items', ['id' => $item->id]);
 });
 
+// Category ownership
+test('cannot create item with another user\'s category', function () {
+    $otherUser = User::factory()->create();
+    $otherCategory = ShoppingCategory::factory()->create(['user_id' => $otherUser->id]);
+    $list = ShoppingList::factory()->create(['user_id' => $this->user->id]);
+
+    $response = $this->postJson("/api/shopping-lists/{$list->id}/items", [
+        'name' => 'Milk',
+        'quantity' => 1,
+        'category_id' => $otherCategory->id,
+    ]);
+
+    $response->assertUnprocessable();
+    $response->assertJsonValidationErrors('category_id');
+});
+
+test('cannot update item with another user\'s category', function () {
+    $otherUser = User::factory()->create();
+    $otherCategory = ShoppingCategory::factory()->create(['user_id' => $otherUser->id]);
+    $list = ShoppingList::factory()->create(['user_id' => $this->user->id]);
+    $item = ShoppingListItem::factory()->create(['shopping_list_id' => $list->id]);
+
+    $response = $this->putJson("/api/shopping-lists/{$list->id}/items/{$item->id}", [
+        'category_id' => $otherCategory->id,
+    ]);
+
+    $response->assertUnprocessable();
+    $response->assertJsonValidationErrors('category_id');
+});
+
+test('cannot add standalone item with another user\'s category', function () {
+    $otherUser = User::factory()->create();
+    $otherCategory = ShoppingCategory::factory()->create(['user_id' => $otherUser->id]);
+    $list = ShoppingList::factory()->create(['user_id' => $this->user->id]);
+
+    $response = $this->postJson("/api/shopping-lists/{$list->id}/items/standalone", [
+        'name' => 'Special Item',
+        'quantity' => 1,
+        'category_id' => $otherCategory->id,
+    ]);
+
+    $response->assertUnprocessable();
+    $response->assertJsonValidationErrors('category_id');
+});
+
+test('bulk add rejects items with another user\'s category', function () {
+    $otherUser = User::factory()->create();
+    $otherCategory = ShoppingCategory::factory()->create(['user_id' => $otherUser->id]);
+    $list = ShoppingList::factory()->create(['user_id' => $this->user->id]);
+
+    $response = $this->postJson("/api/shopping-lists/{$list->id}/items/bulk", [
+        'items' => [
+            ['name' => 'Valid Item', 'quantity' => 1],
+            ['name' => 'Bad Category Item', 'quantity' => 1, 'category_id' => $otherCategory->id],
+        ],
+    ]);
+
+    $response->assertSuccessful();
+    $response->assertJsonCount(1, 'created');
+    $response->assertJsonPath('errors.1.0', fn ($msg) => str_contains($msg, 'category'));
+});
+
 // POST /api/shopping-lists/{id}/items/from-inventory
 test('can add an inventory item to a shopping list', function () {
     $list = ShoppingList::factory()->create(['user_id' => $this->user->id]);

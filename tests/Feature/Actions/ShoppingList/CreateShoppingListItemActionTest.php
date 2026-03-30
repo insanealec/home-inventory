@@ -87,8 +87,8 @@ test('quantity must be a positive integer', function () {
         ->and($rules['quantity'])->toContain('min:1');
 });
 
-test('category_id references shopping_categories table', function () {
+test('category_id rule is nullable', function () {
     $rules = app(CreateShoppingListItemAction::class)->rules();
 
-    expect($rules['category_id'])->toContain('exists:shopping_categories,id');
+    expect($rules['category_id'])->toContain('nullable');
 });
