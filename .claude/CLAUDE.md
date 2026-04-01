@@ -102,6 +102,18 @@ User
         └── hasMany → InventoryItem
 ```
 
+## Angular Conventions
+
+### Page layout
+- Every routed page component **must** wrap its content in `<app-content>` (import `ContentComponent` from `components/common/content.component.ts`). This provides the `min-h-screen bg-gray-100` full-height background. Omitting it leaves the page with a bare white/unstyled background.
+
+### Template rules
+- **No TypeScript-only syntax in templates.** Angular's template parser rejects `as`, `keyof`, and `typeof`. Move any expression needing these into a typed helper method on the component class and call that from the template instead.
+- **Never self-close non-void elements.** Angular's template compiler rejects `<span />`, `<div />`, `<p />` etc. Only true HTML void elements (`<input>`, `<br>`, `<img>`, etc.) may self-close. Always write `<span></span>`.
+- Use `signal()` for all component state that is set asynchronously (e.g. after an HTTP call). Plain class properties mutated after `await` escape Angular's zone and won't trigger change detection. Signals are zone-independent and always safe.
+- `[(ngModel)]` two-way binding requires a plain assignable property, not a signal. For form inputs keep the field as a plain property; signals are for data/loading state.
+- Do not commit — only when explicitly asked.
+
 ## MCP Tools Available (via Laravel Boost)
 - `list-artisan-commands` — check available Artisan commands and their parameters
 - `search-docs` — version-specific Laravel/Pest/Tailwind documentation lookup

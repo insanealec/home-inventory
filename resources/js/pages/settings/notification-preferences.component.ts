@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterLink } from '@angular/router'
 import { NotificationService } from '../../services/notification.service'
+import { ContentComponent } from '../../components/common/content.component'
 
 const LABELS: Record<string, { title: string; description: string }> = {
   low_stock: {
@@ -19,8 +20,9 @@ const LABELS: Record<string, { title: string; description: string }> = {
 @Component({
   selector: 'app-notification-preferences',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ContentComponent],
   template: `
+    <app-content>
     <div class="mx-auto max-w-2xl px-4 py-8">
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Notification preferences</h1>
       <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -40,22 +42,22 @@ const LABELS: Record<string, { title: string; description: string }> = {
               (click)="toggle(meta.key)"
               class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
               [class]="
-                preferences()[meta.key as keyof typeof preferences] === true
+                isEnabled(meta.key) === true
                   ? 'bg-indigo-600'
                   : 'bg-gray-200 dark:bg-gray-600'
               "
               [disabled]="notificationService.preferencesLoading()"
-              [attr.aria-checked]="preferences()[meta.key as keyof typeof preferences]"
+              [attr.aria-checked]="isEnabled(meta.key)"
               role="switch"
             >
               <span
                 class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
                 [class]="
-                  preferences()[meta.key as keyof typeof preferences] === true
+                  isEnabled(meta.key) === true
                     ? 'translate-x-5'
                     : 'translate-x-0'
                 "
-              />
+              ></span>
             </button>
           </div>
         }
@@ -76,6 +78,7 @@ const LABELS: Record<string, { title: string; description: string }> = {
         section.
       </p>
     </div>
+    </app-content>
   `,
 })
 export class NotificationPreferencesComponent implements OnInit {
@@ -100,6 +103,10 @@ export class NotificationPreferencesComponent implements OnInit {
       low_stock: prefs.low_stock,
       expiring_items: prefs.expiring_items,
     })
+  }
+
+  isEnabled(key: string): boolean {
+    return this.preferences()[key as keyof ReturnType<typeof this.preferences>] === true
   }
 
   async toggle(key: 'low_stock' | 'expiring_items'): Promise<void> {
