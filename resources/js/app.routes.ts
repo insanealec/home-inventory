@@ -81,6 +81,10 @@ export const routes: Routes = [
         path: 'settings/notifications',
         loadComponent: () => import('./pages/settings/notification-preferences.component').then(m => m.NotificationPreferencesComponent),
       },
+      {
+        path: 'profile',
+        loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent),
+      },
     ],
   },
 

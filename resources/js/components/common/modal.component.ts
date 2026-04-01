@@ -17,7 +17,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core'
             <div class="flex justify-between items-center mb-4">
               <h2 class="text-xl font-bold text-gray-900 dark:text-white">
                 <ng-content select="[slot=title]" />
-                @if (!title) {
+                @if (title) {
                   {{ title }}
                 }
               </h2>

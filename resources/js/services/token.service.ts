@@ -1,42 +1,42 @@
 import { Injectable, signal, inject } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { firstValueFrom } from 'rxjs'
+import { Token } from '../types/auth'
 
 @Injectable({ providedIn: 'root' })
 export class TokenService {
   private http = inject(HttpClient)
 
-  readonly tokens = signal<any[]>([])
-  readonly newTokenName = signal('')
+  readonly tokens = signal<Token[]>([])
 
   async loadTokens(): Promise<void> {
     try {
-      const data = await firstValueFrom(this.http.get<any[]>('/api/tokens'))
+      const data = await firstValueFrom(this.http.get<Token[]>('/api/tokens'))
       this.tokens.set(data)
     } catch (error) {
       console.error('Failed to load tokens:', error)
     }
   }
 
-  async storeToken(): Promise<void> {
-    if (!this.newTokenName().trim()) return
+  /** Returns the plain text token on success, or null on failure. */
+  async storeToken(name: string): Promise<string | null> {
+    if (!name.trim()) return null
     try {
       const data = await firstValueFrom(
-        this.http.post<{ accessToken: any; plainTextToken: string }>(
+        this.http.post<{ accessToken: Token; plainTextToken: string }>(
           '/api/tokens',
-          { name: this.newTokenName(), abilities: ['*'] }
+          { name, abilities: ['*'] }
         )
       )
       this.tokens.update(list => [...list, data.accessToken])
-      // TODO: modal
-      alert(`New Token Created: ${data.plainTextToken}`)
-      this.newTokenName.set('')
+      return data.plainTextToken
     } catch (error) {
       console.error('Failed to create token:', error)
+      return null
     }
   }
 
-  async destroyToken(tokenId: string): Promise<void> {
+  async destroyToken(tokenId: number): Promise<void> {
     try {
       await firstValueFrom(this.http.delete(`/api/tokens/${tokenId}`))
       this.tokens.update(list => list.filter(t => t.id !== tokenId))

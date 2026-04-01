@@ -60,9 +60,16 @@ import { NotificationBellComponent } from './notification-bell.component'
               </button>
             </div>
           </div>
-          <!-- Right side: notification bell -->
+          <!-- Right side: notification bell + profile -->
           <div class="flex items-center gap-3">
             <app-notification-bell />
+            <a
+              routerLink="/profile"
+              routerLinkActive="text-gray-900 dark:text-white"
+              class="text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+            >
+              Profile
+            </a>
           </div>
         </div>
       </div>
