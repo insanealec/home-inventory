@@ -23,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'plan',
         'notification_preferences',
     ];
 
@@ -70,6 +71,11 @@ class User extends Authenticatable
         $stored = $this->notification_preferences ?? [];
 
         return array_merge(self::NOTIFICATION_TYPES, $stored);
+    }
+
+    public function isPro(): bool
+    {
+        return $this->plan === 'pro';
     }
 
     /**
