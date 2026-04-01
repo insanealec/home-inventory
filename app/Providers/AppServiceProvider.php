@@ -29,27 +29,27 @@ class AppServiceProvider extends ServiceProvider
 
     protected function configureRateLimiting(): void
     {
-        // Fortify login: 5 attempts per minute per email + IP
+        // Fortify login: keyed per email + IP
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->input('email', '');
 
-            return Limit::perMinute(5)->by($email.$request->ip());
+            return Limit::perMinute(config('rate-limiting.auth'))->by($email.$request->ip());
         });
 
-        // Fortify two-factor: 5 attempts per minute per session + IP
+        // Fortify two-factor: keyed per session + IP
         RateLimiter::for('two-factor', function (Request $request) {
-            return Limit::perMinute(5)->by($request->session()->getId().$request->ip());
+            return Limit::perMinute(config('rate-limiting.auth'))->by($request->session()->getId().$request->ip());
         });
 
-        // API token creation/deletion: 20 per minute per user (or IP if unauthenticated)
+        // Token create/delete: keyed per user
         RateLimiter::for('tokens', function (Request $request) {
-            return Limit::perMinute(20)->by($request->user()?->id ?? $request->ip());
+            return Limit::perMinute(config('rate-limiting.tokens'))->by($request->user()?->id ?? $request->ip());
         });
 
-        // General API: tiered by plan — free 60/min, pro 300/min, keyed per user
+        // General API: tiered by plan, keyed per user
         RateLimiter::for('api', function (Request $request) {
             $user = $request->user();
-            $limit = $user?->isPro() ? 300 : 60;
+            $limit = config($user?->isPro() ? 'rate-limiting.api.pro' : 'rate-limiting.api.free');
 
             return Limit::perMinute($limit)->by($user?->id ?? $request->ip());
         });
