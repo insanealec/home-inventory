@@ -2,17 +2,7 @@ import { Component, inject, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterLink } from '@angular/router'
 import { signal } from '@angular/core'
-import { NotificationService } from '../../services/notification.service'
-
-interface Notification {
-  id: number
-  read_at: string | null
-  created_at: string
-  data: {
-    type: string
-    count: number
-  }
-}
+import { NotificationService, NotificationItem } from '../../services/notification.service'
 
 @Component({
   selector: 'app-notification-bell',
@@ -76,44 +66,48 @@ interface Notification {
                 [ngClass]="n.read_at ? 'bg-white dark:bg-gray-800' : 'bg-indigo-50 dark:bg-indigo-950/30'"
                 class="flex items-start gap-3 px-4 py-3 transition-colors"
               >
+                <!-- Unread dot -->
+                <div class="mt-1.5 flex-shrink-0">
+                  @if (!n.read_at) {
+                    <span class="block h-2 w-2 rounded-full bg-indigo-500"></span>
+                  } @else {
+                    <span class="block h-2 w-2"></span>
+                  }
+                </div>
                 <div class="min-w-0 flex-1">
                   <p class="text-sm font-medium text-gray-900 dark:text-white">
                     {{ notificationTitle(n) }}
                   </p>
                   <p class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
-                    {{ formatDate(n.created_at) }}
+                    {{ relativeTime(n.created_at) }}
                   </p>
                 </div>
-                <div class="flex flex-col items-end gap-1">
-                  @if (!n.read_at) {
-                    <button
-                      type="button"
-                      class="text-xs text-indigo-600 hover:underline dark:text-indigo-400"
-                      (click)="markRead(n.id)"
-                    >
-                      Read
-                    </button>
-                  }
-                  <button
-                    type="button"
-                    class="text-xs text-gray-400 hover:text-red-500"
-                    (click)="dismiss(n.id)"
-                  >
-                    Dismiss
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  class="flex-shrink-0 text-xs text-gray-400 hover:text-red-500"
+                  (click)="dismiss(n.id)"
+                >
+                  Dismiss
+                </button>
               </li>
             }
           </ul>
 
           <!-- Footer -->
-          <div class="border-t px-4 py-2 dark:border-gray-700">
+          <div class="flex items-center justify-between border-t px-4 py-2 dark:border-gray-700">
+            <a
+              routerLink="/notifications"
+              (click)="close()"
+              class="text-xs font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+            >
+              View all notifications
+            </a>
             <a
               routerLink="/settings/notifications"
               (click)="close()"
-              class="text-xs text-indigo-600 hover:underline dark:text-indigo-400"
+              class="text-xs text-gray-400 hover:underline dark:text-gray-500"
             >
-              Notification settings
+              Settings
             </a>
           </div>
         </div>
@@ -142,23 +136,31 @@ export class NotificationBellComponent implements OnInit {
     this.open.set(false)
   }
 
-  markRead(id: number): void {
-    this.notificationService.markRead(id)
-  }
-
   markAllRead(): void {
     this.notificationService.markAllRead()
   }
 
-  dismiss(id: number): void {
+  dismiss(id: string): void {
     this.notificationService.dismiss(id)
   }
 
-  formatDate(iso: string): string {
-    return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+  relativeTime(iso: string): string {
+    const now = new Date()
+    const date = new Date(iso)
+    const diffMs = now.getTime() - date.getTime()
+    const minutes = Math.floor(diffMs / 60000)
+    const hours = Math.floor(minutes / 60)
+    const days = Math.floor(hours / 24)
+
+    if (minutes < 1) { return 'Just now' }
+    if (minutes < 60) { return `${minutes}m ago` }
+    if (hours < 24) { return `${hours}h ago` }
+    if (days === 1) { return 'Yesterday' }
+    if (days < 7) { return `${days} days ago` }
+    return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
   }
 
-  notificationTitle(n: Notification): string {
+  notificationTitle(n: NotificationItem): string {
     if (n.data.type === 'low_stock') {
       return `${n.data.count} item${n.data.count === 1 ? '' : 's'} running low`
     }

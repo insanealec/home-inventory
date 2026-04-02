@@ -3,6 +3,7 @@
 use App\Actions\Dashboard\GetDashboardSummaryAction;
 use App\Actions\Notification\DismissNotificationAction;
 use App\Actions\Notification\GetNotificationPreferencesAction;
+use App\Actions\Notification\GetAllNotificationsAction;
 use App\Actions\Notification\GetNotificationsAction;
 use App\Actions\Notification\MarkNotificationReadAction;
 use App\Actions\Notification\UpdateNotificationPreferencesAction;
@@ -99,6 +100,7 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
 
     // Notification Centre
     Route::get('/notifications', GetNotificationsAction::class);
+    Route::get('/notifications/all', GetAllNotificationsAction::class);
     Route::put('/notifications/{notificationId}', MarkNotificationReadAction::class);
     Route::delete('/notifications/{notificationId}', DismissNotificationAction::class);
 });

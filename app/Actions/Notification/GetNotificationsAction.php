@@ -15,7 +15,7 @@ class GetNotificationsAction
     {
         return $user->notifications()
             ->latest()
-            ->limit(50)
+            ->limit(15)
             ->get();
     }
 

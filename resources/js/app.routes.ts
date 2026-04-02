@@ -78,6 +78,10 @@ export const routes: Routes = [
       },
 
       {
+        path: 'notifications',
+        loadComponent: () => import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent),
+      },
+      {
         path: 'settings/notifications',
         loadComponent: () => import('./pages/settings/notification-preferences.component').then(m => m.NotificationPreferencesComponent),
       },

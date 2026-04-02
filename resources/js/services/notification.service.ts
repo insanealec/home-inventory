@@ -1,6 +1,22 @@
 import { Injectable, signal, computed, inject } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { firstValueFrom } from 'rxjs'
+import { Pagination } from '../types/common'
+
+export interface LowStockItem {
+  id: number
+  name: string
+  quantity: number
+  reorder_point: number
+  unit: string | null
+}
+
+export interface ExpiringItem {
+  id: number
+  name: string
+  expiration_date: string
+  quantity: number
+}
 
 export interface NotificationItem {
   id: string
@@ -8,7 +24,7 @@ export interface NotificationItem {
   data: {
     type: 'low_stock' | 'expiring_items'
     count: number
-    items: Array<Record<string, unknown>>
+    items: LowStockItem[] | ExpiringItem[]
     window_days?: number
   }
   read_at: string | null
@@ -46,6 +62,12 @@ export class NotificationService {
     } finally {
       this.loading.set(false)
     }
+  }
+
+  async fetchAllNotifications(page: number = 1): Promise<Pagination<NotificationItem>> {
+    return firstValueFrom(
+      this.http.get<Pagination<NotificationItem>>(`/api/notifications/all?page=${page}`)
+    )
   }
 
   async markRead(id: string): Promise<void> {
