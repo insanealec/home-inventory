@@ -8,12 +8,13 @@ import { provideHttpClient, withInterceptors, withXsrfConfiguration } from '@ang
 import { AppComponent } from './app.component'
 import { routes } from './app.routes'
 import { csrfInterceptor } from './services/csrf.interceptor'
+import { errorInterceptor } from './services/error.interceptor'
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([csrfInterceptor]),
+      withInterceptors([csrfInterceptor, errorInterceptor]),
       withXsrfConfiguration({
         cookieName: 'XSRF-TOKEN',
         headerName: 'X-XSRF-TOKEN',
